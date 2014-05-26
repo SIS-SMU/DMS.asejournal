@@ -1,0 +1,122 @@
+\documentclass{sig-alternate}
+\pdfpagewidth=8.5in
+\pdfpageheight=11in
+\usepackage{float}
+
+\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{algorithmic}
+\usepackage{soul}
+\usepackage{comment}
+\usepackage{array}
+\newcommand{\liang}[1]{\sethlcolor{Green}\hl{LG says: #1}}
+\newcommand{\dl}[1]{\sethlcolor{Yellow}\hl{DL says: #1}}
+\newcommand{\lx}[1]{{\sethlcolor{GreenYellow}\hl{LX says: #1}}}
+\newcommand{\hy}[1]{{\sethlcolor{GreenYellow}\hl{HY says: #1}}}
+
+\newcommand{\etal}{{\it et al.\ }}
+\newcommand{\CodeIn}[1]{{\small\texttt{#1}}}
+\newcommand{\CodeOutSize}{\scriptsize}
+\newenvironment{CodeOut}{\begin{scriptsize}}{\end{scriptsize}}
+\newtheorem{prop}{Property}
+\newtheorem{defn}{Definition}[section]
+
+\usepackage{ifthen}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{tabularx}
+\usepackage{enumerate}
+\usepackage{balance}
+
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+\ifthenelse{\boolean{showcomments}}
+{ \newcommand{\mynote}[2]{
+    \fbox{\bfseries\sffamily\scriptsize#1}
+    {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}}
+{ \newcommand{\mynote}[2]{}}
+
+\newcommand{\sdlnote}[1]{\todosimple{DL}{#1}}
+\newcommand{\task}[1]{\mynote{**Task**}{#1}}
+
+\newcommand{\nop}[1]{}
+\def\concat{\mathit{+\!\!+}}
+\def\ln{\hspace{0.15cm}}
+\newcommand{\hide}[1]{\hspace*{-5pt}~}
+
+
+\floatstyle{ruled}
+\newfloat{algorithm}{thp}{loa}
+\floatname{algorithm}{Algorithm}
+\newfloat{procedure}{thp}{loa}
+\floatname{procedure}{Procedure}
+
+\newcommand{\ie}{{\sl i.e.}}
+\newcommand{\eg}{{\sl e.g.}}
+\newcommand{\etc}{{\sl etc.}}
+
+\hyphenpenalty=8000
+\tolerance=1000
+
+
+\begin{document}
+
+%\pagenumbering{arabic}
+\pagestyle{plain}
+\thispagestyle{plain}
+
+\title{\input{title}}
+
+\numberofauthors{1}
+\author{\alignauthor Liang Gong$^1$\thanks{The work was done while the author was visiting Singapore Management University.}, David Lo$^2$, Lingxiao Jiang$^2$, and Hongyu Zhang$^1$ \\
+\affaddr{$^1$School of Software, Tsinghua University, Beijing 100084, China \\ Tsinghua National Laboratory for Information Science and Technology (TNList) } \\
+\email{$^1$gongliang10@mails.tsinghua.edu.cn, hongyu@tsinghua.edu.cn} \\
+\affaddr{$^2$School of Information Systems, Singapore Management University, Singapore} \\
+\email{$^2$davidlo@smu.edu.sg, lxjiang@smu.edu.sg}
+}
+
+
+\conferenceinfo{ASE}{'12, September 3-7, 2012, Essen, Germany}
+\CopyrightYear{12}
+\crdata{978-1-4503-1204-2/12/09}
+\clubpenalty=10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+\category{D.2.5}{Software Engineering}Testing and Debugging
+\terms{Algorithms, Experimentation, Reliability}
+\keywords{Test Case Prioritization, Fault Localization}
+
+\input{body}
+
+\vspace{-4pt}
+\let\oldthebibliography=\thebibliography
+\let\endoldthebibliography=\endthebibliography
+\renewenvironment{thebibliography}[1]{%
+  \begin{oldthebibliography}{#1}%
+    \setlength{\parskip}{0pt}%
+    \setlength{\itemsep}{0pt}%
+}%
+{%
+  \end{oldthebibliography}%
+}
+{
+%\def\baselinestretch{0.96343}
+%\scriptsize
+%\fontsize{7}{8}\selectfont
+\bibliographystyle{abbrv}
+%\balance
+%\balancecolumns
+\bibliography{main}
+}%\vspace{0.2cm}
+
+\end{document}

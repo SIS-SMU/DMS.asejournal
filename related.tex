@@ -1,0 +1,47 @@
+In this section, we describe related work on fault localization, defect prediction, test case prioritization,  diagnostic prioritization, and automated oracle construction. The survey here is by no means a complete list.
+
+
+
+\smallskip\noindent
+\textbf{Fault} \textbf{Localization.} Over the past decade, many automatic fault localization and debugging methods have been proposed.
+The ways of calculating ambiguousness  for program elements are various, including state-of-arts (e.g. {\em Tarantula}~\citep{JHS02,JH05} and {\em Ochiai}~\citep{Abreu:2009.jss}).
+%In recent work, Baah \etal propose using Probabilistic Program Dependence Graphl~\citep{BaahPH08} and
+%causal inference~\citep{BaahPH10} that combines static dependency information and dynamic coverage information to diagnose the program.
+%Their methods show a great improvement over contentional fault localization methods.
+\cite{RR03} propose a nearest neighbor fault localization tool called \textsc{Whither} that compares the failed execution
+to the correct execution and reports the most ambiguity  locations in the program.
+\cite{Zeller2002a} applies {\em Delta Debugging} to search for the minimum state differences between a failed execution and a successful execution that may cause the failure. \cite{LAZJ03} consider predicates whose true evaluation correlates with failures are more likely to be the root cause. Campos et al. propose ENTBUG which applies entropy theory to guide test case generation~\cite{campos2013entropy}.
+%Based on the similar intuition, \textsc{Sober}~\citep{LYFHM05} extends Liblit's method by incorporating information on the outcomes of multiple predicate evaluations and use statistical test to determine the difference between predicate values in passed and failed traces.
+
+%Artzi \etal propose a directed test generation technique to provide enough test cases for fault localization techniques~\citep{ArtziDTP10,ADTP10b}. It is very effective for HTML pages since they are of rich structures. However, the code responsible for producing incorrect output might be the entire program, their method is unlikely to be effective for a program that produces simple structures or a single number.
+
+%\noindent
+%\textbf{Defect} \textbf{Prediction}
+%In defect prediction, many works~\citep{Nagappan:2006:MMP:1134285.1134349,DBLP:conf/icsm/ZhangW10,DBLP:journals/ase/LiZWZ12} use software size, complexity metrics, and %variations of various variables in software development process to build prediction models. For example, Nagappan \etal~\citep{Nagappan:2006:MMP:1134285.1134349} %propose regression models with principal component analysis on the code metrics to predict post-release defects.
+%In \citep{DBLP:conf/icsm/ZhangW10}, Zhang \etal construct defect prediction models based on a small number of randomly sampled program files. In \citep{DBLP:journals/ase/LiZWZ12}, they further propose an active learning based method for building defect prediction models.
+
+%Some studies consider code structure to improve the prediction accuracy. e.g.,
+%Shin~\etal use a fault model with information about call relations, which provided noticeable accuracy improvements over models without call information ~\citep{10.1109/MSR.2009.5069481}. In  \citep{Zimmermann:2008:PDU:1368088.1368161} network analysis is applied to identify defects.
+
+
+%Model-based debugging techniques, e.g., \citep{Mayer2007,Feldman2006}, are relatively heavyweight and consider semantics of the code since they are based on expensive logic reasoning over formal models of programs. There are also other static and dynamic analysis techniques, e.g., \citep{fse:msady04,TTG08}, that are related to model-based debugging.
+%Although few model-based techniques have employed the concept of failure association, incorporating association measures and other statistical analyses into program models can be a future direction for improving the performance of model-based debugging techniques.
+
+
+\smallskip\noindent
+\textbf{Test} \textbf{Case} \textbf{Prioritization.}
+Test case prioritization techniques are initially proposed for early fault detection in regression testing. \cite{RUCH01} show the coverage-based and Fault-exposing-potential based approaches can improve the rate of fault detection of test suites. \cite{SEAGMGR01} further investigate ``version-specific prioritization" on different profile granularities. \citep{LHH07} show that {\em Additional Greedy Algorithm} is among the best approaches for regression test case prioritization.
+%In \citep{Gonzalez-SanchezPAGG11}, Gonz{\'a}lez-Sanchez \etal adopt {\em information gain} for diagnostic prioritization.
+\cite{DBLP:conf/icse/BaudryFT06} propose {\em Dynamic Basic Block} (\textsc{Dbb}) for test suite reduction. Their method focuses on the number of \textsc{Dbb}s.
+\cite{Alberto2011} further consider group sizes for test suite reduction.
+
+%Jiang \etal~\citep{JiangCT11} investigate various prioritization techniques and show that existing test adequacy criteria are still insufficient in supporting effective fault localization.
+
+\smallskip\noindent
+\textbf{Oracle} \textbf{Construction.}
+Although in recent years, many studies \cite[e.g.][]{CPacheco05,Xie06,BRH04} aim to automatically generate test oracles, they are often heavy weight, based on certain assumption and thus applicable to specific scenarios. {\em Eclat} \citep{CPacheco05} can generate assertions based on a learning model, but they assume correct executions.
+%In \citep{CPacheco07}, {\em Randoop} allows annotation of the source code to identify observer methods to be used for assertion generation.
+\cite{Xie06} proposes a method called {\em Orstra} for oracle checking.
+%{\em Orstra} generates assertions based on observed return values and object states and adds assertions to check future runs against these observations.
+\cite{BRH04} propose \textsc{Argo} which selects test cases inducing unknown behaviors to actively construct test oracles for improving test quality. The approach is more suitable for regression testing. Our approach complements these studies by reducing the effort needed for the purpose of fault localization.
+

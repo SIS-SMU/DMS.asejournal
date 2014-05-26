@@ -1,0 +1,137 @@
+ In this section, we summarize relevant materials on software fault localization and test case prioritization that we use in our empirical evaluation.
+
+\subsection{Fault Localization}\label{sec.prelim.fault_local_test_gen}
+
+Spectrum-based fault localization aims to locate faults by analyzing program spectra of passed and failed executions. A program spectra often consists of information about whether a program element (e.g., a function, a statement, or a predicate) is hit in an execution.
+%and how many times it is hit.
+Program spectra between passed and failed executions are used to compute the suspiciousness score for every element. All elements are then sorted in descending order according to their suspiciousness for developers to investigate. Empirical studies \citep[e.g.][]{NainarCRL07,JH05} show that such techniques can be effective in guiding developers to locate faults. \cite{DBLP:conf/issta/ParninO11} conduct a user study and show that by using a fault localization tool, developers can complete a task significantly faster than without the tool on simpler code. However, fault localization may be much less useful for inexperienced developers.
+
+The key for a spectrum-based fault localization technique is the formula used to calculate suspiciousness.
+Table~\ref{table_all_techniques} lists the formulae of three well-known techniques: {\em Tarantula}~\citep{JH05}, {\em Ochiai}~\citep{Abreu:2009.jss},
+and {\em Jaccard}~\citep{Abreu:2009.jss}. Given a program element $s$,
+$N_{ef}(s)$ is the number of {\em \textbf{f}ailed} executions that {\em \textbf{e}xecute} $s$;
+$N_{np}(s)$ numerates {\em \textbf{p}assed} executions that do {\em \textbf{n}ot} hit $s$;
+by the same token, $N_{nf}(s)$ counts {\em \textbf{f}ailed} executions that do {\em \textbf{n}ot} hit $s$
+and $N_{ep}(s)$ counts {\em \textbf{p}assed} executions that {\em \textbf{e}xecute} $s$.
+
+
+\begin{table}[!h]
+	\caption{Spectrum-based fault localization}
+%    \scriptsize
+        \centering
+{
+        \renewcommand{\arraystretch}{1.5}
+        \begin{tabular}{l l l c} \hline
+        Name &\quad& Formula \\ \hline\hline% \\ [-1.5ex]
+        {\em Tarantula} &\quad&  $\dfrac{\frac{N_{ef}(s)}{N_{ef}(s) + N_{nf}(s)}}{\frac{N_{ef}(s)}{N_{ef}(s) + N_{nf}(s)} + \frac{N_{ep}(s)}{N_{ep}(s) + N_{np}(s)}}$ \\ [1ex] \\ [-1.5ex]
+        {\em Ochiai} &\quad&  $\dfrac{N_{ef}(s)}{\sqrt{(N_{ef}(s)+N_{nf}(s))\cdot(N_{ef}(s)+N_{ep}(s))}}$ \\ [1ex] \\ [-1.5ex]
+		{\em Jaccard} &\quad&  $\dfrac{N_{ef}(s)}{N_{ef}(s)+N_{nf}(s)+N_{ep}(s)}$ \\ \hline
+        \end{tabular}
+}
+    \label{table_all_techniques}
+\end{table}
+
+\noindent{\bf Example.} Each column for $t_{i}$ in Figure~\ref{motiv_example} is a spectrum. The columns $N_{ef}$, $N_{ep}$, $N_{nf}$, and $N_{np}$ can thus be calculated from the spectra.
+%in Figure~\ref{motiv_example} is a code snippet~\citep{Gonzalez-SanchezPAGG11,JiangCT11} that counts character with one seeded fault.
+%We mutate the predicate in line 7 ($s7$ \texttt{`z'$>=$c} $\rightarrow$ \texttt{`z'$>$c}. As a result, test case with at least one \texttt{`z'} character will get a wrong output.
+The suspiciousness scores of {\em Tarantula}, {\em Ochiai}, and {\em Jaccard} for each statement are then calculated based on the formulae in Table~\ref{table_all_techniques}.
+
+%\vspace{0.2cm}
+%\begin{center}
+%\begin{tabular}{|l|c|}
+%\hline {\bf Measure} & {\bf Suspiciousness}\\
+%\hline {\em Ochiai} & 0.548\\
+%\hline {\em Tarantula} & 0.563\\
+%\hline {\em Jaccard} & 0.3\\
+%\hline
+%\end{tabular}
+%\end{center}
+
+%
+%\begin{figure*}[!htbp]
+%    \centering
+%    \includegraphics[width=17cm]{problem.pdf}
+%    \caption{Post-Mortem Analysis and Real Scenario}
+%    \lx{May use this figure in the Intro as part of our motivation. Is it too big though?}
+%    \label{fig:problem}
+%\end{figure*}
+%
+
+
+\subsection{Test Case Prioritization}\label{sec.prelim.test_prior}
+
+%This section introduces test case prioritization techniques.
+\cite{RUCH01} define the problem of test case prioritization  as follows:
+
+\begin{definition}[{\bf Test Case Prioritization}]
+Given
+(1) $T$, a set of test cases, (2) $PT$, the set of permutations of $T$, and (3) $f$, a function mapping $PT$ to real numbers, the problem is to find a permutation $p \in PT$ such that:
+%\begin{center}
+	$\forall{p' \in PT}. f(p) \geq f(p')$.
+%\end{center}
+\end{definition}
+
+%\vspace{-4pt}
+In this definition, $PT$ represents the set of all possible orderings of $T$; $f$ is an award function indicating the value for each ordering. The higher the value, the better it is. For easier implementation, award functions in the literature are often defined as a priority function mapping test cases to real numbers, and then the optimal permutation is simply to sort the test cases in descending order according to their values. The key for a test case prioritization technique to be effective is to design a priority function that assigns appropriate priority to the test cases under given situations.
+%In the context of regression testing, $f$ can be a measure about the coverage rate of desired program elements. developers want to detect faults as early as possible, and thus the prioritization goal is to select test cases are to be run first such that faults are found earlier. Specifically, given two ordered sets of test cases $p$ and $p'$, if $p'$ reveals fault earlier than $p'$, then $f(p) \geq f(p')$.
+The following subsections highlight some test case prioritization techniques that we compare with our approach.
+
+%\vspace{-4pt}
+\subsubsection{Coverage Based Prioritization}
+
+\textbf{\textsc{S{\scriptsize TMT}-T{\scriptsize OTAL}}}~\citep{RUCH01} is a test case prioritization strategy that assigns higher priorities to
+a test case that executes more statements in a program.
+\textbf{S{\scriptsize TMT}-A{\scriptsize DDTL}}~\citep{RUCH01} extends \textsc{Stmt-Total} by selecting next test case that covers more statements
+that have not been covered by previously selected test cases.
+{\em Adaptive Random Test Prioritization} ({\bf A{\scriptsize RT}})~\citep{JiangZCT09} starts by randomly selecting a set of test cases
+that achieves maximal coverage, and then sort the unlabeled test cases based on their {\em Jaccard distances} to previous selected test cases.
+Among its several variants, {\bf A{\scriptsize RT}-M{\scriptsize IN}} was shown to be the best test case prioritization strategy~\citep{JiangZCT09}.
+However, recent study~\citep{DBLP:conf/issta/ArcuriB11} shows that \textsc{Art} may not be effective when the failure rate is low and the high distance calculations cost might overshadow the reduction on test execution times.
+
+%\vspace{-4pt}
+\subsubsection{Fault-Exposing Potential Based Prioritization}
+\textbf{\textsc{F{\scriptsize EP}-A{\scriptsize DDTL}}}~\citep{RUCH01} aims to sort test cases so that the {\em rate of failure detection}
+of the prioritized test cases can be maximized. To reduce the need for test oracles, the rate of failure detection is approximated by the
+{\em fault-exposing potential}(\textsc{Fep}) of a test case, which is in turn estimated based on program {\em mutation analysis}~\citep{RGHamlet1977}:
+each program element $s_j$ is mutated many times and
+the test case $t_i$ is executed on each mutant; the \textsc{Fep} of $t_i$ for $s_j$ ($\textsc{Fep}_{ij}$) is calculated as
+the ratio of mutants of $s_j$ detected by $t_i$ over the total number of
+mutants of $s_j$; then, the \textsc{Fep} of $t_i$ ($\textsc{Fep}_i$) is the sum of the FEP of $t_i$ for all elements ($\sum_{j}\textsc{Fep}_{ij}$).
+
+%\vspace{-4pt}
+\subsubsection{Diagnostic Prioritization}\label{subsubsec.dp}
+\begin{comment}
+There are many techniques proposed to automatically generate a large number of test inputs. However, there are only a few methods that could automatically generate test oracles which are often limited to a certain family of failures, e.g.,~\citep{Artzi2010,Xie06}. In post-mortem study, test oracles can be obtained by running test cases on the correct program (see Figure~\ref{fig:problem}(A)). In practice, however, the code base contains faults and developers are not aware of its location unless testing and debugging are performed. Therefore, the fault-free version of the program is absent and testers have to manually create test oracles for each input, or check the correctness of program output one by one, both of which are laborious (see Figure~\ref{fig:problem}(B)).
+
+Diagnostic prioritization is proposed to deal with this problem. Diagnostic prioritization select and prioritize a relatively smaller subset of test cases and ask users to label the test outcome. The goal of test case prioritization and diagnostic prioritization is different though; while test case prioritization is often employed to reduce the amount of time needed to run all tests, diagnostic prioritization would like to reduce the number of test cases that need manual labeling and yet optimize fault localization accuracy. The problem of running too many test cases is not important in diagnostic prioritization as the key issue to be solved is the lack of test cases (with available oracles). We define this problem in Definition~\ref{defn:diagnosticpriori}.
+
+\subsubsection{Existing Methods}
+\end{comment}
+
+%Jiang \etal
+\citet{JiangCT11} investigate the effects of previous test case prioritization techniques on fault localization and find that coverage-based techniques may be insufficient since the prioritized test cases may not be useful in supporting effective fault localization.
+%\textbf{Information Gain-based Approach.}
+Gonz{\'a}lez-Sanchez \etal use the concept of {\em diagnostic distribution} that represents the probability of a program element to be faulty, which is then estimated by {\em Bayesian inference} based on previous selected test cases, and in their tool named \textbf{S{\scriptsize EQUOIA}}~\citep{Gonzalez-SanchezPAGG11}, sort test cases so that the information entropy of the diagnostic distribution can be minimized.
+%
+%use of information gain as prioritizing metric which select trace
+%based on the entropy of {\em diagnostic distribution}. In their method(\textsc{Sequoia})
+%they estimate the probability of a {\em diagnosis}(program element $d_k$)
+%containing fault $Pr(d_k)$ by the {\em Bayesian inference}.
+%They also use a heuristic to adjust the probability.
+%Generally speaking, each time when an element $d_k$ appears in failed trace,
+%their method increase $Pr(d_k)$, otherwise, when $d_k$ is executed by passed trace
+%or absent in failed trace, their method decreases $Pr(d_k)$.
+%
+%Based on the diagnostic distribution, their method always selects the test cases that leads to the
+%minimal information entropy.
+%
+%\textbf{Ambiguity Group Reduction.}
+Soon after, Gonz{\'a}lez-Sanchez \etal propose another strategy
+called {\em Ambiguity Group Reduction} to sort test cases.
+%based on {\em Dynamic Basic Block}(\textsc{Dbb})~\citep{baudry06a}.
+In their tool named \textbf{R{\scriptsize APTOR}}~\citep{Alberto2011}, program elements having the same spectrum record are considered to be in the same ambiguity group (\textsc{Ag}),
+and {\sc Raptor} aims to select next test case that would maximize the number of ambiguity groups while trying to minimize the deviation on the sizes of the ambiguity groups.
+
+\subsubsection{Practical Usage} 
+
+To use the above mentioned test case prioritization techniques in practice, developers first collect the program spectra (execution trace) for all of the test cases. Then, they run the test case prioritization techniques to select top-n ranked test cases, and manually judge whether it is passed or failed. Based on these ranked test cases and their corresponding labels (passed or failed), they apply fault localization techniques\citep[e.g.][]{NainarCRL07,JH05} to locate the faults.

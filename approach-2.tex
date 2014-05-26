@@ -1,0 +1,168 @@
+
+
+In this section we answer the two questions raised in Section~\ref{sec.motive} to conceptualize \textsc{Dms}.
+
+\subsection{Identify High Change-potential Elements}
+
+In order to evaluate the change-potential of program elements, we first represent program element's rank changes as time series data points. We then fit the points to a linear model using regression analysis. The regression coefficient of the model and the error (i.e., discrepancy between the model and the real points) are used as proxy to identify program elements with high change-potentials. More details are described as follows.
+
+\vspace{0.2cm}
+\noindent{\em Representative Time Series Construction.} We capture changes in the ranks of a program element as a series of {\em trend units}:
+
+\begin{enumerate}
+%	\setlength{\parskip}{0pt}%
+    \setlength{\itemsep}{3pt}%
+	\item When the rank of the program element decreases, its current trend unit is \texttt{[+]}.
+	\item When the rank of the program element increases, its current trend unit is \texttt{[-]}.
+	\item If the element's rank stays the same, its current trend unit is \texttt{[0]}.
+\end{enumerate}
+
+For example, the ranks of statement $s_{8}$ in different iterations and its corresponding trend units are listed in Table \ref{tab:trend_example}. This series of trend units is further converted to a series of points $<x_{i},y_{i}>$, where $x_{i}$ represents the iteration number, and $y_{i}$ represents cumulated changes in program ranks at iteration $i$. We set $y_{0}$ as 0. When the trend in iteration $i$ is {\bf \texttt{[+]}}, $y_{i} = y_{i-1} + 1$.
+If the $i$-th trend is {\bf \texttt{[-]}}, $y_{i} = y_{i-1} - 1$, otherwise, if the trend does not change({\bf \texttt{[0]}}) then $y_{i} = y_{i-1}$. We refer to this series of points as the {\em evolution trend} of the corresponding program element.
+
+\begin{table}[!h]
+%	\small
+	\centering
+	\caption{Evolution Trend of $s_8$.}
+	\renewcommand{\arraystretch}{1.5}
+	\newcolumntype{C}{>{\centering\arraybackslash}m{0.45cm}<{}}
+	\begin{tabular}{cCCCCCCCC}
+		\hline
+		Iteration ($x_{i}$) &1 &2 &3 &4 &5 &6 &7 &... \\
+		\hline\hline
+		Rank &11 & 6 & 4 &2 &3 &11 & 5 & ... \\
+		Trend ($\mathcal{T}$) & {\bf}&{\bf\texttt{[+]}}&{\bf\texttt{[+]}}&{\bf\texttt{[+]}}&{\bf\texttt{[-]}}&{\bf\texttt{[-]}}&{\bf\texttt{[+]}}&... \\
+		$y_{i}$ & 0 & 1 & 2 & 3 & 2 & 1 & 2 & ... \\
+		\hline
+	\end{tabular}
+%	\vspace*{-8pt}
+    \label{tab:trend_example}
+\end{table}
+
+
+\vspace{0.2cm}
+\noindent{\em Linear Model Construction.} Then we use {\em linear regression analysis}~\citep{GrIy94} to model the trend of each program element. Each trend is modeled as a linear equation:
+
+\begin{equation}
+	y_{i}=\beta_{1}\cdot x_{i} + \beta_{0} + \epsilon_{i}
+\end{equation}
+
+\begin{comment}
+\hide{
+where the parameter $\beta_1$ is estimated by:
+\begin{equation}
+	\hat{\beta}_{1} = \frac{\sum\limits_{i}{(x_{i}-\bar{x})\cdot(x_{i}-\bar{x})}}{\sum\limits_{i}{(x_{i}-\bar{x})^2}}
+\end{equation}
+the error of estimation $\hat{\beta}_{1}$ is given by:
+\begin{equation}
+	\hat{\sigma}_{\beta_{1}} = \hat{\sigma}_{\epsilon}\sqrt{\frac{1}{\sum\limits_{i}{(x_i-\bar{x}^2)}}}
+\end{equation}
+in the equation, $\hat{\sigma}_{\epsilon}$ is the estimate of constant variance of error term, which is
+defined by:
+\begin{equation}
+	\hat{\sigma}_{\epsilon} = \frac{1}{N-2} \cdot \sum\limits_{i}{e_{i}^{2}}
+\end{equation}
+where $e_{i} = y_{i} - \hat{y}_{i} $ which is the error between the actual value and predicted value.
+}
+\end{comment}
+
+\vspace{0.2cm}
+\noindent{\em Change Potential Computation.} Here we define the change-potential of a program element with trend $\mathcal{T}$ as:
+\begin{equation}
+	\mathcal{W}_\mathcal{T} =  \left| \hat{\beta}_{1} \right| \cdot \frac{1}{\hat{\sigma}_{\beta_{1}}+1}\label{eq:trend_metric}
+\end{equation}
+
+
+$\hat{\beta}_{1}$ is estimated by {\em least squares} and $\hat{\sigma}_{\beta_{1}}$ is the error of estimating $\beta_{1}$~\citep{GrIy94}. In this metric, the numerator is the absolute value of the trend slope and the denominator considers the fitness of the regression model which represents the deviation of the actual value from the regression model.
+Using this metric, our method isolates trends that evolve in a monotonous and stable way. Table \ref{tab:trend_exp} shows a few example trends and their change-potentials according to Equation \ref{eq:trend_metric}.
+
+\begin{table}[!htbp]
+	\centering
+%	\vspace*{-8pt}
+	\caption{Trend examples and their potentials}
+		\renewcommand{\arraystretch}{1.5}
+%		\small
+        \begin{tabular}{|cc|ccc|}
+			\hline
+			 \multicolumn{ 2}{|c|}{$\mathcal{T}$} &     $\hat{\beta}_{1}$ &      $\hat{\sigma}_{\beta_{1}}$ &  $\mathcal{W}_\mathcal{T}$ \\
+			\hline\hline
+			 {\bf \texttt{[+]}} &  {\bf \texttt{[+]}} &          1 &          0 &          1 \\
+			\hline
+			 {\bf \texttt{[+]}} &  {\bf \texttt{[-]}} &          0 &      0.577 &          0 \\
+			\hline
+			 {\bf \texttt{[+]}} &  {\bf \texttt{[0]}} &        0.5 &      0.289 &      0.388 \\
+			\hline
+			 {\bf \texttt{[0]}} &  {\bf \texttt{[0]}} &          0 &          0 &          0 \\
+			\hline
+		\end{tabular}
+	\label{tab:trend_exp}
+\end{table}
+
+\subsection{Speed up the Rank Change Process}
+
+After evaluating the program elements according to their change-potentials, \textsc{Dms} will try to speed up the evolution trend of the program elements based on the change-potential($\mathcal{W}_{\mathcal{T}}$). First, program elements with the same suspiciousness scores are grouped together, they are termed as {\em suspicious group} in this paper. These suspicious groups are then assigned change-potential scores based on the change-potentials of their constituent program elements. When new test cases are added, based on the actual program elements that get executed, some groups can be broken into two. When this happens, the diversity of the suspiciousness scores increases in most cases. The goal of \textsc{Dms} is to select a new test case that breaks a group into two sub-groups where the overall change-potentials are maximized.
+
+We calculate the potential of a group $g$ by summing up the potential of all program elements $d$ that
+belongs to $g$.
+\begin{equation}
+	\mathcal{W}_{g} = \sum\limits_{d \in g}\mathcal{W}_{\mathcal{T}_{d}}\label{eq:elem_potential}
+\end{equation}
+
+where $\mathcal{T}_{d}$ is the change-potential of the program element $d$ based on the labeled execution trace profiles.
+
+The overall change-potential score of all suspicious groups($G$) are calculated as follows:
+\begin{equation}
+	\mathcal{H}_G = \sum\limits_{g_{i} \in G}{ \mathcal{W}_{g_i}^{2} }\label{eq:groupset_potential}
+\end{equation}
+
+To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between the overall change-potential score of the current groups $G$ ($\mathcal{H}_G$) and the overall change-potential score of all groups when $t$ is added to the pool of labeled test cases ($G \Leftarrow t$), and chooses the test case that can maximize the difference as the next one for labeling.
+\begin{equation}
+	\operatorname*{arg\,max}_{t \in T_\mathcal{U}} \left\{ \mathcal{H}_G - \mathcal{H}_{(G \Leftarrow t)} \right\}\label{eq:select_metric}
+\end{equation}
+
+The new groups ($G \Leftarrow t$) and their change-potential $\mathcal{H}_{(G \Leftarrow t)}$ can be estimated based on $t$'s spectrum (i.e., the set of program elements hit by $t$) even when the pass/fail label for $t$ is unknown. Given an existing suspicious group, if a newly added test case $t$ only covers a subset of the group elements, this group may be broken into two: one contains the elements hit by $t$, and the other contains the elements uncovered by $t$. Then, each subgroup inherits a portion of the original group's change-potential proportional to its size. For example, suppose a group $g$ in $\mathcal{H}_{G}$ contains 2 elements, whose potentials are 0.4 and 0.6 respectively, and a new test case $t$ breaks $g$ into $g_{1}$ and $g_{2}$, each of which contains 1 element; then, the change-potentials $\mathcal{W}_{g_1}$ and $\mathcal{W}_{g_2}$ are both $\frac{1}{2}\times(0.4+0.6) = 0.5$.
+
+Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements which could lead to {\em confirmation bias}. More specifically, \textsc{Dms} might make an initially promising statement become less suspicious if the statement is covered in the next selected trace and the trace is labeled {\em pass}, or it is not covered in the next selected trace and the trace is labeled {\em fail}.
+
+\subsection{Overall Approach}
+
+Before prioritization, all test cases will be executed on instrumented program versions and the corresponding traces would be collected.
+Our approach (pseudocode in Algorithm~\ref{algo:DMS}) takes in a set of unlabeled traces $T_\mathcal{U}$ and the labeling budget $k$ (i.e., the maximum number of traces to be manually labeled), and outputs $k$ selected traces for manual analysis.
+One failed trace ($t_{0}$ in Line 1) is also used as an input because a developer usually starts debugging only when at least one test fails\footnote{If there are more than one test fails, Dms randomly select one of them to begin with.}, and fault localization techniques rarely produce meaningful results if all spectra consists of only passed executions.
+
+To collect indicative trends for analyzing and speedup, at lines 3-9 we first collect $w$ traces by one generic prioritization technique $\mathcal{P}$ and record evolution trend $\mathcal{T}_{d}$ for each program element $d$. This step is desirable since it helps bootstrap the trend analysis in our solution.
+At lines 12-24, we perform the second stage which speeds up the change process based on existing trends. Note that after selecting each test case $t$ in this stage, we will update the trend for all elements. $f_{T}$ represents a fault localization technique (e.g.,{\em Ochiai}), built based on the set of test cases $T$. $f_{T}(d)$ returns the suspicious score for the program element $d$.
+
+
+\begin{table}[!htbp]
+    \centering
+	\caption{Evolution of Suspiciousness Scores for the Running Example in Table~\ref{motiv_example} using RAPTOR~\citep{Alberto2011}.}
+    \includegraphics[width=12cm]{ag_table.pdf}
+	%\vspace*{-16pt}
+    \label{tab:ag_evo}
+\end{table}
+
+\input{pseudocode.tex}
+
+In the pseudocode, \texttt{\textbf{manual\_label}}($t$) asks a user to check
+the correctness of the outcome from the test case $t$. Procedure \texttt{\textbf{div}}($T$)
+counts the number of unique suspicious scores (diversity) generated by $f_T$, which is defined as follows:
+\begin{equation}
+	\texttt{\textbf{div}}(T) = \left| \bigcup\limits_{d \in \mathcal{D}} \{f_{T}(d)\} \right|
+\end{equation}
+
+The diversity of small programs may reach the maximum after selecting a small number of test cases. To avoid random selection
+after that happens, the pseudocode at lines 20-23 resets the set $T_{tmp}$
+based on which the suspiciousness scores of all program elements are calculated. With this step, \textsc{Dms} can
+continually choose test cases from $T_{\mathcal{U}}$ that maximally diversify suspicious scores calculated based on $T_{tmp}$.
+Repeating the diversity selection process also helps to confirm the previously selected test cases and make the final result more robust.
+
+%\lx{merged with the last paragraph in "Example"}
+%Table \ref{tab:dms_evo} shows the selected test cases for the motivating example using \textsc{Dms}.  \textsc{Raptor} needs five labeled traces (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}$\rightarrow$\texttt{$t_{7}$}$\rightarrow$\texttt{$t_{9}$}) to
+%rank the real fault ($s_{7}$) top in the check list (see Table \ref{tab:ag_evo}) based on maximal {\em Ambiguity Group Reduction}(see Section \ref{subsubsec.dp}), \textsc{Dms} only requires user to manually label four traces (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}$\rightarrow$\texttt{$t_{9}$}).
+
+%The delay between each round of query is short as the time complexity of computing suspiciousness score for all program elements $\mathcal{D}$ is $O(\left|\mathcal{D}\right|)$ and the time complexity of computing trend score is $O(\left|\mathcal{D}\right| \cdot k)$. Users can choose to stop the process when the cost budget is exhausted (e.g., when the number ($k$) of test cases a user is willing or able to label has been reached).
+
+%Our approach greedily splits suspicious groups based on all previously labeled tests. This may lead to a non-optimal solution as defined by Definition 3.1, but it much simplifies our solution and our empirical study shows it produces promising results to save much human labeling effort, although it may not necessarily save machine time that is required to run all test cases.
+
+\input{example}

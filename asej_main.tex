@@ -1,0 +1,170 @@
+\RequirePackage{fix-cm}
+%
+%\documentclass{svjour3}                     % onecolumn (standard format)
+%\documentclass[smallcondensed]{svjour3}     % onecolumn (ditto)
+\documentclass[smallextended]{svjour3}       % onecolumn (second format)
+%\documentclass[twocolumn]{svjour3}          % twocolumn
+%
+\smartqed  % flush right qed marks, e.g. at end of proof
+%
+\usepackage{graphicx}
+\usepackage{float}
+
+\usepackage{subfigure}
+\usepackage{alltt}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{url}
+\usepackage{algorithmic}
+\usepackage{soul}
+\usepackage{comment}
+\usepackage{array}
+\newcommand{\liang}[1]{\sethlcolor{Green}\hl{LG says: #1}}
+\newcommand{\dl}[1]{\sethlcolor{Yellow}\hl{DL says: #1}}
+\newcommand{\lx}[1]{{\sethlcolor{GreenYellow}\hl{LX says: #1}}}
+\newcommand{\hy}[1]{{\sethlcolor{GreenYellow}\hl{HY says: #1}}}
+
+\newcommand{\etal}{{\it et al.\ }}
+\newcommand{\CodeIn}[1]{{\small\texttt{#1}}}
+\newcommand{\CodeOutSize}{\scriptsize}
+\newenvironment{CodeOut}{\begin{scriptsize}}{\end{scriptsize}}
+\newtheorem{prop}{Property}
+\newtheorem{defn}{Definition}[section]
+
+\usepackage{ifthen}
+\usepackage{amssymb}
+\usepackage{textcomp}
+\usepackage{tabularx}
+\usepackage{enumerate}
+\usepackage{balance}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{natbib}
+
+\newboolean{showcomments}
+\setboolean{showcomments}{true}
+\ifthenelse{\boolean{showcomments}}
+{ \newcommand{\mynote}[2]{
+    \fbox{\bfseries\sffamily\scriptsize#1}
+    {\small$\blacktriangleright$\textsf{\emph{#2}}$\blacktriangleleft$}}}
+{ \newcommand{\mynote}[2]{}}
+
+\newcommand{\sdlnote}[1]{\todosimple{DL}{#1}}
+\newcommand{\task}[1]{\mynote{**Task**}{#1}}
+
+\newcommand{\nop}[1]{}
+\def\concat{\mathit{+\!\!+}}
+\def\ln{\hspace{0.15cm}}
+\newcommand{\hide}[1]{\hspace*{-5pt}~}
+
+
+\floatstyle{ruled}
+\newfloat{algorithm}{thp}{loa}
+\floatname{algorithm}{Algorithm}
+\newfloat{procedure}{thp}{loa}
+\floatname{procedure}{Procedure}
+
+
+\usepackage{url}
+%
+% \usepackage{mathptmx}      % use Times fonts if available on your TeX system
+%
+% insert here the call for the packages your document requires
+%\usepackage{latexsym}
+% etc.
+%
+% please place your own definitions here and don't use \def but
+% \newcommand{}{}
+%
+% Insert the name of "your journal" with
+\journalname{Automated Software Engineering}
+%
+
+\begin{document}
+
+\newcommand{\ie}{{\sl i.e.}}
+\newcommand{\eg}{{\sl e.g.}}
+\newcommand{\etc}{{\sl etc.}}
+\def\lxn{\hspace{0.125cm}}
+
+\title{Diversity Maximization Speedup for Localizing Faults in Single-Fault and Multi-Fault Programs}
+
+\titlerunning{Diversity Maximization Speedup for Fault Localization}        % if too long for running head
+
+\author{Xin Xia$^{\ast}$$^\dag$\thanks{$^{\ast}$This work was done while the author was visiting Singapore Management University.}       \and
+        Liang Gong$^\dag$\thanks{$^\dag$The two authors contribute equally for this work.} \and
+        Tien-Duy~B.~Le \and
+        David Lo \and
+        Lingxiao Jiang \and
+        Hongyu~Zhang
+}
+
+%\authorrunning{Short form of author list} % if too long for running head
+
+\institute{  Xin Xia  \at
+              College of Computer Science and Technology, Zhejiang University, Hangzhou,China\\
+              \email{xxkidd@zju.edu.cn}
+              \and
+             Liang Gong \at
+                School of Software, Tsinghua University, Beijing, China\\
+              \email{gongliang10@mails.tsinghua.edu.cn}
+           \and
+             Tien-Duy B. Le   \at
+              School of Information Systems, Singapore Management University, Singapore\\
+              \email{btdle.2012@phdis.smu.edu.sg}
+           \and
+           David Lo \at
+              School of Information Systems, Singapore Management University, Singapore\\
+              \email{davidlo@smu.edu.sg}
+           \and
+           Lingxiao Jiang \at
+              School of Information Systems, Singapore Management University, Singapore\\
+              \email{lxjiang@smu.edu.sg}
+           \and
+           Hongyu Zhang \at
+              School of Software, Tsinghua University, Beijing, China\\
+              \email{hongyu@tsinghua.edu.cn}
+}
+
+\date{Received: date / Accepted: date}
+% The correct dates will be entered by the editor
+
+
+\maketitle
+
+\begin{abstract}
+\input{abstract}
+\keywords{Fault Localization \and Test Case Prioritization}
+\end{abstract}
+
+
+\input{body}
+
+%\begin{acknowledgements}
+%If you'd like to thank anyone, place your comments here
+%and remove the percent signs.
+%\end{acknowledgements}
+
+% BibTeX users please use one of
+\bibliographystyle{spbasic}      % basic style, author-year citations
+%\bibliographystyle{spmpsci}      % mathematics and physical sciences
+%\bibliographystyle{spphys}       % APS-like style for physics
+\bibliography{main}   % name your BibTeX data base
+
+% Non-BibTeX users please use
+%\begin{thebibliography}{}
+%%
+%% and use \bibitem to create references. Consult the Instructions
+%% for authors for reference list style.
+%%
+%\bibitem{RefJ}
+%% Format for Journal Reference
+%Author, Article title, Journal, Volume, page numbers (year)
+%% Format for books
+%\bibitem{RefB}
+%Author, Book title, page numbers. Publisher, place (year)
+%% etc
+%\end{thebibliography}
+
+\end{document}
+% end of file template.tex
+

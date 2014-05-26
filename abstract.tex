@@ -1,0 +1,24 @@
+Fault localization is useful for reducing debugging effort. However, many fault localization techniques require non-trivial number of test cases {\em with oracles}, which can determine whether a program behaves correctly for every test input. Test oracle creation is expensive because it can take much manual labeling effort. Given a number of test cases to be executed, it is challenging to minimize the number of test cases requiring manual labeling £¨i.e., label the test cases as pass/fail) and in the meantime achieve good fault localization accuracy.
+
+To address this challenge, this paper presents a novel test case selection strategy based on {\em Diversity Maximization Speedup} (\textsc{Dms}). {\sc Dms} orders a set of unlabeled test cases in a way that maximizes the effectiveness of a fault localization technique. Developers are only expected to label a much smaller number of test cases along this ordering to achieve good fault localization results. We evaluate the performance of \textsc{Dms} on 2 different types of programs, single-fault and multi-fault programs. Our experiments with 411 faults from the Software-artifact Infrastructure Repository show (1) that {\sc Dms} can help existing fault localization techniques to achieve comparable accuracy with on average 67\% and 6\% fewer labeled test cases than previously best test case prioritization techniques for single-fault and multi-fault programs, and (2) that given a labeling budget (i.e., a fixed number of labeled test cases), {\sc Dms} can help existing fault localization techniques reduce their debugging cost (in terms of the amount of code needed to be inspected to locate faults). We conduct hypothesis test and show that the saving of the debugging cost we achieve for the real {\em C} programs are statistically significant.
+
+
+
+
+
+
+
+%Consider a set of test cases with unavailable oracle, how could we minimize the number of manually constructed oracles, to get good fault localization accuracy? This paper propose a technique that address this problem. We
+
+%In the past decade, a number of fault localization techniques have been proposed to reduce debugging efforts. Many fault localization techniques require a substantial number of failures and correct executions to effectively localize faults. However, in a system, often there are only a few test cases with corresponding test oracles. Thus, the effectiveness of existing fault localization techniques on many real systems are potentially hampered due to the unavailability of test cases.
+
+%One promising solution is to leverage test case generation techniques; however, this too faces difficulties. In the literature, there exists many test case generation tool that can generate numerous test inputs. However, for fault localization, in addition to test inputs, we also need corresponding test oracles. Often these test oracles, which would determine whether a system behaves correctly for particular test inputs, need to be manually constructed. This process is laborious and error prone. Thus, the key research question is: how could we minimize human effort while achieving similar fault localization capability on systems with minimal test cases?
+
+%To address this research question, this paper presents a novel {\em diagnostic prioritization} approach. Our tool would order a set of test runs with unavailable test oracles to be diagnosed -- as whether they are failures or correct executions. We show that with only a small number of test runs to diagnose, our approach could improve existing techniques in $\ldots$\% of the $\ldots$ cases taken from four real {\em C} programs and Siemens test suite. We also show by statistical hypothesis test that the result is statistically significant.
+
+%Thus, there is a need to increase the number of test cases an
+%To address the above problem, recently, Artzi et al. propose a test case augmentation approach for fault localization. In addition to test input, fault localization also require the corresponding test oracle. Artzi et al. only handle two classes of error: a program crashes, and an HTML document is not valid, where an automated test oracle can be easily built. However, many other failures could not be detected by the proposed approach.
+
+%These techniques include Test case generation and software fault localization. However, integrating those methods are still laborious. When a large number of new test cases are generated, corresponding test oracle are often absent and developers have to manually write down oracles or check execution status. However, only a few techniques are proposed to better prioritize for diagnostic.
+
+%In this paper presents a new diagnostic prioritize technique. Empirical study shows that our method obtains up to XX\% reduction of the labeling cost over the existing best method.

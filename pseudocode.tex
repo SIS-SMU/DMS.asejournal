@@ -1,0 +1,62 @@
+
+\begin{algorithm}%[!htb]
+{
+\centering
+%\vspace{0.2cm}
+ 
+\hspace{-0.0cm}\parbox[l]{3.2in} {
+{%\small
+\begin {tabular}[t]{l}
+\textbf{Procedure DiversityMaximizationSpeedup}\\
+\textbf{Input:}\\
+\quad $k$ - Maximum number of traces to be selected\\
+\quad $w$ - Switching threshold\\
+\quad $T_\mathcal{U}$ - Unlabeled trace set, where $|T_\mathcal{U}|> k$\\
+\quad $t_0$ - Initial failed trace\\
+\textbf{Output:}\\
+\quad $k$ selected test cases prioritized\\
+\textbf{Method:}\\
+\end{tabular}
+\begin{algorithmic}[1]
+	\STATE $T_{tmp} \leftarrow \{<t_0, fail>\}$
+	\STATE \textit{\texttt{//Bootstraping with prioritization technique}} $\mathcal{P}$
+	\WHILE{$|T_{tmp}|\leq k$ \AND $\left| T_{tmp} \right| \leq w$}
+		\STATE Select $t$ by $\mathcal{P}$
+		\STATE $c \leftarrow$\texttt{\textbf{manual\_label}}($t$)
+		\STATE $T_{tmp} \leftarrow T_{tmp} \cup \left\{\right.<t, c>\left.\right\}$; $T_\mathcal{U}\leftarrow T_\mathcal{U} \setminus \left\{t\right\}$
+		\STATE $\forall d \in \mathcal{D}$, calculate suspicious score $f_{T_{tmp}}(d)$
+		\STATE $\forall d \in \mathcal{D}$, update trend $\mathcal{T}_{d}$ based on $f_{T_{tmp}}(d)$
+	\ENDWHILE
+	\STATE $T_\mathcal{S} \leftarrow T_{tmp}$
+	\STATE \textit{\texttt{//Speedup}}
+	\WHILE{$|T_\mathcal{S}|\leq k$}
+		\STATE $\forall d \in \mathcal{D}$, calculate $\mathcal{W}_{\mathcal{T}_{d}}$ by Equation \ref{eq:trend_metric}
+		\STATE Select $t$ by Equation \ref{eq:select_metric}
+		\STATE $c \leftarrow$\texttt{\textbf{manual\_label}}($t$)
+		\STATE $T_{tmp} \leftarrow T_{tmp} \cup \left\{\right.<t, c>\left.\right\}$; $T_\mathcal{U}\leftarrow T_\mathcal{U} \setminus \left\{t\right\}$
+		\STATE $\forall d \in \mathcal{D}$, calculate suspicious score $f_{T_{tmp}}(d)$
+		\STATE $\forall d \in \mathcal{D}$, update $\mathcal{T}_{d}$ based on $f_{T_{tmp}}(d)$
+		\STATE $T_\mathcal{S} \leftarrow T_\mathcal{S} \cup T_{tmp}$
+		\IF {\texttt{\textbf{div}}($T_{tmp}$) cease growing}
+			\STATE $T_{tmp} \leftarrow \{<t_0, fail>\}$
+			\STATE $\forall d \in \mathcal{D}$, clear $\mathcal{T}_{d}$
+		\ENDIF
+	\ENDWHILE
+	\STATE return $T_\mathcal{S}$
+\end{algorithmic}
+}
+}
+}
+%\vspace{-0.2cm}
+\caption{\small{Diversity Maximization Speedup}} \label{algo:DMS}
+%\vspace{-0.0cm}
+\end{algorithm}
+
+
+
+
+
+
+
+
+
