@@ -67,14 +67,18 @@ where $e_{i} = y_{i} - \hat{y}_{i} $ which is the error between the actual value
 \end{comment}
 
 \vspace{0.2cm}
-\noindent{\em Change Potential Computation.} Here we define the change-potential of a program element with trend $\mathcal{T}$ as:
+\noindent{\em Change Potential Computation.} In order to speed up the overall evolution process, our approach needs to select next test case that keeps elements with monotonic trends (high change-potential trends) evolving their rankings. In other words, we do not care about changing elements' ranking with unstable trends. In order to identify those high change-potential elements, we need a metric to evaluate and compare trends of different elements. Here we define the change-potential of a program element with trend $\mathcal{T}$ as:
+
 \begin{equation}
 	\mathcal{W}_\mathcal{T} =  \left| \hat{\beta}_{1} \right| \cdot \frac{1}{\hat{\sigma}_{\beta_{1}}+1}\label{eq:trend_metric}
 \end{equation}
 
 
 $\hat{\beta}_{1}$ is estimated by {\em least squares} and $\hat{\sigma}_{\beta_{1}}$ is the error of estimating $\beta_{1}$~\citep{GrIy94}. In this metric, the numerator is the absolute value of the trend slope and the denominator considers the fitness of the regression model which represents the deviation of the actual value from the regression model.
-Using this metric, our method isolates trends that evolve in a monotonous and stable way. Table \ref{tab:trend_exp} shows a few example trends and their change-potentials according to Equation \ref{eq:trend_metric}.
+
+\noindent\textbf{Rational of Equation \ref{eq:trend_metric}:} \textit{A good trend should have a larger slope as well as a smaller deviation from the linear model.}
+
+In our empirical model, fast changing monotonic model has a bigger slope and thus gets a bigger numerator. Meanwhile a stable and monotonic trend has a smaller deviation from the linear model and thus gets a smaller denominator. Using this metric, our method isolates trends that evolve in a monotonous and stable way. Table \ref{tab:trend_exp} shows a few example trends and their change-potentials according to Equation \ref{eq:trend_metric}.
 
 \begin{table}[!htbp]
 	\centering
@@ -108,7 +112,11 @@ belongs to $g$.
 	\mathcal{W}_{g} = \sum\limits_{d \in g}\mathcal{W}_{\mathcal{T}_{d}}\label{eq:elem_potential}
 \end{equation}
 
-where $\mathcal{T}_{d}$ is the change-potential of the program element $d$ based on the labeled execution trace profiles.
+where $\mathcal{T}_{d}$ is the change-potential of the program element $d$ based on the labelled execution trace profiles.
+
+\noindent\textbf{Rational of Equation \ref{eq:elem_potential}:} \textit{Group with high change-potential elements should be given higher priority to break.}
+
+We want to diversify the rankings of elements in the suspicious group that has a high change-potential score. To identify those high change-potential groups, we measure the sum of change-potential scores of its member elements.
 
 The overall change-potential score of all suspicious groups($G$) are calculated as follows:
 \begin{equation}
@@ -122,12 +130,19 @@ To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between 
 
 The new groups ($G \Leftarrow t$) and their change-potential $\mathcal{H}_{(G \Leftarrow t)}$ can be estimated based on $t$'s spectrum (i.e., the set of program elements hit by $t$) even when the pass/fail label for $t$ is unknown. Given an existing suspicious group, if a newly added test case $t$ only covers a subset of the group elements, this group may be broken into two: one contains the elements hit by $t$, and the other contains the elements uncovered by $t$. Then, each subgroup inherits a portion of the original group's change-potential proportional to its size. For example, suppose a group $g$ in $\mathcal{H}_{G}$ contains 2 elements, whose potentials are 0.4 and 0.6 respectively, and a new test case $t$ breaks $g$ into $g_{1}$ and $g_{2}$, each of which contains 1 element; then, the change-potentials $\mathcal{W}_{g_1}$ and $\mathcal{W}_{g_2}$ are both $\frac{1}{2}\times(0.4+0.6) = 0.5$.
 
+\noindent\textbf{Rational of Equation \ref{eq:groupset_potential} and \ref{eq:select_metric}:} \textit{Test cases that breaks more groups with higher change-potential should be given higher priority.}
+
+Equation \ref{eq:groupset_potential} measures the overall change potential score of all suspicious groups and its square form manifests the diversity of elements ranking. 
+As an example, suppose there are two groups $g_{1}$ and $g_{2}$. Group $g_1$ has two high change-potential elements with change-potential score 0.3 and 0.4. 
+Group $g_{2}$ has two low change-potential elements with change-potential score 0.1 and 0.2.
+According to equation \ref{eq:groupset_potential}, $\mathcal{H}_G = (0.3+0.4)^{2} + (0.1 + 0.2)^2 = 0.58$. After choosing a test case that 1) breaks $g_1$ only and 2) does not change the change-potential score of any elements, then according to equation \ref{eq:select_metric}, the new change-potential would be $0.3^{2} + 0.4^{2} + (0.1 + 0.2)^2 = 0.34$. However, if we choose another test cases that 1) breaks $g_{2}$ only and 2) does not change the change-potential score of any elements, the new change-potential would be $ (0.3+0.4)^{2} + 0.1^{2} + 0.2^{2} = 0.54$. As a result, the test case that breaks the high change-potential group (\textit{i.e.,} $g_{1}$) leads to a larger overall change-potential decrease and thus will be given a higher priority to be selected.
+
 Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements which could lead to {\em confirmation bias}. More specifically, \textsc{Dms} might make an initially promising statement become less suspicious if the statement is covered in the next selected trace and the trace is labeled {\em pass}, or it is not covered in the next selected trace and the trace is labeled {\em fail}.
 
 \subsection{Overall Approach}
 
 Before prioritization, all test cases will be executed on instrumented program versions and the corresponding traces would be collected.
-Our approach (pseudocode in Algorithm~\ref{algo:DMS}) takes in a set of unlabeled traces $T_\mathcal{U}$ and the labeling budget $k$ (i.e., the maximum number of traces to be manually labeled), and outputs $k$ selected traces for manual analysis.
+Our approach (pseudocode in Algorithm~\ref{algo:DMS}) takes in a set of unlabeled traces $T_\mathcal{U}$ and the labelling budget $k$ (i.e., the maximum number of traces to be manually labeled), and outputs $k$ selected traces for manual analysis.
 One failed trace ($t_{0}$ in Line 1) is also used as an input because a developer usually starts debugging only when at least one test fails\footnote{If there are more than one test fails, Dms randomly select one of them to begin with.}, and fault localization techniques rarely produce meaningful results if all spectra consists of only passed executions.
 
 To collect indicative trends for analyzing and speedup, at lines 3-9 we first collect $w$ traces by one generic prioritization technique $\mathcal{P}$ and record evolution trend $\mathcal{T}_{d}$ for each program element $d$. This step is desirable since it helps bootstrap the trend analysis in our solution.

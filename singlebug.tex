@@ -164,10 +164,10 @@ better than \textsc{Raptor} on 25.20\% of the faulty versions, worse
 on 19.29\% of the faulty versions, and shows no improvement
 on 55.51\% of the faulty versions. The first row of
 Table \ref{tab:compare_21} characterizes the degree of positive improvement of
-\textsc{Dms} over \textsc{Raptor}. As the table indicates, half of the 33.46\%
+\textsc{Dms} over \textsc{Raptor}. As the table indicates, half of the 25.20\%
 faulty versions with positive improvement values have improvements
-between 0.03\% and 7.71\%, and the other half
-have improvements between 7.71\% and 77.42\%. The average
+between 0.03\% and 3.93\%, and the other half
+have improvements between 3.93\% and 77.42\%. The average
 positive improvement of \textsc{Dms} over \textsc{Raptor} is 7.71\%.
 
 %\vspace{-0.1cm}
@@ -195,6 +195,39 @@ positive improvement of \textsc{Dms} over \textsc{Raptor} is 7.71\%.
 		\end{tabular}
     \label{tab:compare_21}
 \end{table}
+
+Table \ref{tab:compare_31} characterizes the degree of negative improvement of
+\textsc{Dms} over \textsc{Raptor}. As the table indicates, half of the 19.29\%
+faulty versions with positive improvement values have improvements
+between 0.03\% and 0.60\%, and the other half
+have improvements between 0.60\% and 1.15\%. The average
+negative improvement of \textsc{Dms} over \textsc{Raptor} is 0.54\%.
+
+\begin{table}[!htbp]
+    \centering
+		\caption{Distribution of negative improvements.}
+		\renewcommand{\arraystretch}{1.5}
+		\small
+        \begin{tabular}{|c|c|c|c|c|}
+			\hline
+			Test Pri. Tech.  &        Max &       Mean &     Median &        Min \\
+			\hline\hline
+			\textsc{Dms} vs \textsc{Raptor} & {\bf 1.15\%} &     0.54\% &     0.60\% &     0.03\% \\
+			\hline
+			\textsc{Dms} vs \textsc{Sequoia} & {\bf 31.71\%} &    4.01\% &     1.33\% &     0.03\% \\
+			\hline
+			\textsc{Dms} vs \textsc{Stmt-Addtl} & {\bf 30.73\%} &    4.14\% &     1.52\% &     0.03\% \\
+			\hline
+			\textsc{Dms} vs \textsc{Stmt-Total} & {\bf 27.88\%} &    4.61\% &    2.64\% &     0.17\% \\
+			\hline
+			\textsc{Dms} vs \textsc{Fep-Addtl} & {\bf 24.70\%} &    5.06\% &     2.15\% &     0.03\% \\
+			\hline
+			\textsc{Dms} vs \textsc{Art-Min} & {\bf 22.41\%} &     4.11\% &     1.72\% &     0.03\% \\
+			\hline
+		\end{tabular}
+    \label{tab:compare_31}
+\end{table}
+
 
 We conduct paired Wilcoxon signed-rank test to confirm the difference in performance between \textsc{Dms} and six existing prioritization techniques.
 The statistical test result rejects the null hypothesis and suggests that \textsc{Dms} is statistically significantly
