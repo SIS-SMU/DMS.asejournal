@@ -92,7 +92,7 @@ However, recent study~\citep{DBLP:conf/issta/ArcuriB11} shows that \textsc{Art} 
 \subsubsection{Fault-Exposing Potential Based Prioritization}
 \textbf{\textsc{F{\scriptsize EP}-A{\scriptsize DDTL}}}~\citep{RUCH01} aims to sort test cases so that the {\em rate of failure detection}
 of the prioritized test cases can be maximized. To reduce the need for test oracles, the rate of failure detection is approximated by the
-{\em fault-exposing potential}(\textsc{Fep}) of a test case, which is in turn estimated based on program {\em mutation analysis}~\citep{RGHamlet1977}:
+{\em fault-exposing potential} (\textsc{Fep}) of a test case, which is in turn estimated based on program {\em mutation analysis}~\citep{RGHamlet1977}:
 each program element $s_j$ is mutated many times and
 the test case $t_i$ is executed on each mutant; the \textsc{Fep} of $t_i$ for $s_j$ ($\textsc{Fep}_{ij}$) is calculated as
 the ratio of mutants of $s_j$ detected by $t_i$ over the total number of
@@ -111,7 +111,7 @@ Diagnostic prioritization is proposed to deal with this problem. Diagnostic prio
 %Jiang \etal
 \citet{JiangCT11} investigate the effects of previous test case prioritization techniques on fault localization and find that coverage-based techniques may be insufficient since the prioritized test cases may not be useful in supporting effective fault localization.
 %\textbf{Information Gain-based Approach.}
-Gonz{\'a}lez-Sanchez \etal use the concept of {\em diagnostic distribution} that represents the probability of a program element to be faulty, which is then estimated by {\em Bayesian inference} based on previous selected test cases, and in their tool named \textbf{S{\scriptsize EQUOIA}}~\citep{Gonzalez-SanchezPAGG11}, sort test cases so that the information entropy of the diagnostic distribution can be minimized.
+\cite{Gonzalez-SanchezPAGG11} use the concept of {\em diagnostic distribution} that represents the probability of a program element to be faulty, which is then estimated by {\em Bayesian inference} based on previous selected test cases, and in their tool named \textbf{S{\scriptsize EQUOIA}}, sort test cases so that the information entropy of the diagnostic distribution can be minimized.
 %
 %use of information gain as prioritizing metric which select trace
 %based on the entropy of {\em diagnostic distribution}. In their method(\textsc{Sequoia})
@@ -126,12 +126,12 @@ Gonz{\'a}lez-Sanchez \etal use the concept of {\em diagnostic distribution} that
 %minimal information entropy.
 %
 %\textbf{Ambiguity Group Reduction.}
-Soon after, Gonz{\'a}lez-Sanchez \etal propose another strategy
+Soon after, \cite{Alberto2011} propose another strategy
 called {\em Ambiguity Group Reduction} to sort test cases.
 %based on {\em Dynamic Basic Block}(\textsc{Dbb})~\citep{baudry06a}.
-In their tool named \textbf{R{\scriptsize APTOR}}~\citep{Alberto2011}, program elements having the same spectrum record are considered to be in the same ambiguity group (\textsc{Ag}),
+In their tool named \textbf{R{\scriptsize APTOR}}, program elements having the same spectrum record are considered to be in the same ambiguity group (\textsc{Ag}),
 and {\sc Raptor} aims to select next test case that would maximize the number of ambiguity groups while trying to minimize the deviation on the sizes of the ambiguity groups.
 
-\subsubsection{Practical Usage} 
+\subsubsection{Practical Usage}
 
-To use the above mentioned test case prioritization techniques in practice, developers first collect the program spectra (execution trace) for all of the test cases. Then, they run the test case prioritization techniques to select top-n ranked test cases, and manually judge whether it is passed or failed. Based on these ranked test cases and their corresponding labels (passed or failed), they apply fault localization techniques\citep[e.g.][]{NainarCRL07,JH05} to locate the faults.
+To use the above mentioned test case prioritization techniques in practice, a program needs to be instrumented first and executed with test cases to collect the program spectra (execution traces) of the test cases. Then, developers can apply one of the test case prioritization techniques to select top-$n$ ranked test cases, and manually judge whether each of the test cases passes or fails. Based on these selected test cases and their corresponding labels (passed or failed), a fault localization technique \citep[e.g.][]{NainarCRL07,JH05} can then be applied to locate faults. Our test case prioritization technique in this paper can also be applied in the same fashion as the above mentioned test case prioritization techniques.

@@ -8,7 +8,7 @@ In the subsections, we illustrate its intuition and formally define it as a vari
 
 
 
-\begin{figure}[!htbp]
+\begin{figure}[tbp]
     \centering
 %    \vspace{-0.9cm}
     \includegraphics[width=12cm]{motive_1.png}
@@ -21,8 +21,8 @@ We use the running example (Figure~\ref{motiv_example}) to explain the intuition
 \textsc{Dms}. With sufficient test cases, an effective fault localization technique is more likely to assign high suspiciousness scores to faulty program elements while assigning low scores to non-faulty elements, and each element should be assigned a unique rank according to their suspiciousness scores to facilitate further investigation (such as the scores shown in the last three columns in Figure~\ref{motiv_example}).
 
 With fewer test cases, a fault localization technique may not be able to achieve an effective ranking. Figure \ref{fig:motive_1} shows the evolution trend of the ranks of the running example's program statements based on their {\em Ochiai}~\citep{Abreu:2009.jss} scores as test cases are added one by one. The test cases are added by \textsc{Raptor} which is the existing best approach in the literature~\citep{Alberto2011} for selecting test cases for fault localization. In this figure, the horizontal axis represents the number of iterations to select test cases. In each iteration, one test case is picked from the unlabeled test case pool $T_\mathcal{U}$.
-The vertical axis is the rank\footnote{\scriptsize Program elements with the same suspiciousness score are assigned the same {\em low} rank since developers are expected to investigate all of the elements having the same score if they are ever going to investigate one. For example, if statements $s_{1}$, $s_{2}$, $s_{3}$ have the highest suspiciousness score, then the ranks of the 3 statements are all 3.}
-of a statement sorted based on suspiciousness. Each line in the figure depicts the evolution of the suspiciousness rank for one specific statement. For example, $s_{7}$ (the faulty statement) is ranked $11^{th}$ in the first iteration, and $6^{th}$ in the second iteration.
+The vertical axis is the rank
+of a statement sorted based on suspiciousness.\footnote{\scriptsize Program elements with the same suspiciousness score are assigned the same {\em low} rank since developers are expected to investigate all of the elements having the same score if they are ever going to investigate one. For example, if statements $s_{1}$, $s_{2}$, $s_{3}$ have the highest suspiciousness score, then the ranks of the 3 statements are all 3.} Each line in the figure depicts the evolution of the suspiciousness rank for one specific statement. For example, $s_{7}$ (the faulty statement) is ranked $11^{th}$ in the first iteration, and $6^{th}$ in the second iteration.
 
 This figure shows that the ranks of different statements may evolve in different ways as more test cases are added. Specifically, some statements keep rising in general (e.g., $s_{7}$); some others oscillate back and forth (e.g., $s_{9}$).
 Ideally, we should only use test cases that could enable a fault localization technique to assign elements the scores close to the final score when all test cases are used.
@@ -38,9 +38,9 @@ The following questions prompted us to define {\sc Dms}:
 
 %\vspace{-4pt}
 \begin{enumerate}
-\item Can we analyze the change trend of every program element and identify ``promising'' elements with {\em high change-potentials} (i.e., elements whose ranks are likely to change much in a stable way)?
+\item Can we analyze the change trend of every program element and identify ``promising'' elements with {\em high change potentials} (i.e., elements whose ranks are likely to change much in a stable way)?
 %\vspace{-2pt}
-\item For program elements having high change-potentials, can we select appropriate test cases to speed up their rank changing process so that these elements can reach their final ranks faster (i.e., with fewer test cases)?
+\item For program elements having high change potentials, can we select appropriate test cases to speed up their rank-changing process so that these elements can reach their final ranks faster (i.e., with fewer test cases)?
 \end{enumerate}
 
 %\vspace{-6pt}

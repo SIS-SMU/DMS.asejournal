@@ -4,7 +4,7 @@ In this section we answer the two questions raised in Section~\ref{sec.motive} t
 
 \subsection{Identify High Change-potential Elements}
 
-In order to evaluate the change-potential of program elements, we first represent program element's rank changes as time series data points. We then fit the points to a linear model using regression analysis. The regression coefficient of the model and the error (i.e., discrepancy between the model and the real points) are used as proxy to identify program elements with high change-potentials. More details are described as follows.
+In order to evaluate the change potential of program elements, we first represent program element's rank changes as time series data points. We then fit the points to a linear model using regression analysis. The regression coefficient of the model and the error (i.e., discrepancy between the model and the real points) are used as proxy to identify program elements with high change potentials. More details are described as follows.
 
 \vspace{0.2cm}
 \noindent{\em Representative Time Series Construction.} We capture changes in the ranks of a program element as a series of {\em trend units}:
@@ -20,7 +20,7 @@ In order to evaluate the change-potential of program elements, we first represen
 For example, the ranks of statement $s_{8}$ in different iterations and its corresponding trend units are listed in Table \ref{tab:trend_example}. This series of trend units is further converted to a series of points $<x_{i},y_{i}>$, where $x_{i}$ represents the iteration number, and $y_{i}$ represents cumulated changes in program ranks at iteration $i$. We set $y_{0}$ as 0. When the trend in iteration $i$ is {\bf \texttt{[+]}}, $y_{i} = y_{i-1} + 1$.
 If the $i$-th trend is {\bf \texttt{[-]}}, $y_{i} = y_{i-1} - 1$, otherwise, if the trend does not change({\bf \texttt{[0]}}) then $y_{i} = y_{i-1}$. We refer to this series of points as the {\em evolution trend} of the corresponding program element.
 
-\begin{table}[!h]
+\begin{table}[t]
 %	\small
 	\centering
 	\caption{Evolution Trend of $s_8$.}
@@ -67,18 +67,22 @@ where $e_{i} = y_{i} - \hat{y}_{i} $ which is the error between the actual value
 \end{comment}
 
 \vspace{0.2cm}
-\noindent{\em Change Potential Computation.} In order to speed up the overall evolution process, our approach needs to select next test case that keeps elements with monotonic trends (high change-potential trends) evolving their rankings. In other words, we do not care about changing elements' ranking with unstable trends. In order to identify those high change-potential elements, we need a metric to evaluate and compare trends of different elements. Here we define the change-potential of a program element with trend $\mathcal{T}$ as:
+\noindent{\em Change Potential Computation.} In order to speed up the overall evolution process, our approach needs to select next test case that keeps elements with monotonic trends (high change-potential trends) evolving their rankings. In other words, we do not care about changing elements' ranking with unstable trends. In order to identify those high change-potential elements, we need a metric to evaluate and compare trends of different elements. Here we define the change potential of a program element $d$ with the trend $\mathcal{T}_d$ as follows:
 
 \begin{equation}
-	\mathcal{W}_\mathcal{T} =  \left| \hat{\beta}_{1} \right| \cdot \frac{1}{\hat{\sigma}_{\beta_{1}}+1}\label{eq:trend_metric}
+\label{eq:trend_metric}
+	\mathcal{W}_{\mathcal{T}_d} =  \frac{| \hat{\beta}_{1} |}{\hat{\sigma}_{\beta_{1}}+1}
 \end{equation}
 
 
+\noindent
+%where $\mathcal{T}_d$ is the estimated linear model for $y_i$ of the element $d$, 
 $\hat{\beta}_{1}$ is estimated by {\em least squares} and $\hat{\sigma}_{\beta_{1}}$ is the error of estimating $\beta_{1}$~\citep{GrIy94}. In this metric, the numerator is the absolute value of the trend slope and the denominator considers the fitness of the regression model which represents the deviation of the actual value from the regression model.
+When the context is clear, we also use $\mathcal{W}_\mathcal{T}$ or $\mathcal{W}_d$ to represent the change potential of a trend or a program element.
 
-\noindent\textbf{Rational of Equation \ref{eq:trend_metric}:} \textit{A good trend should have a larger slope as well as a smaller deviation from the linear model.}
-
-In our empirical model, fast changing monotonic model has a bigger slope and thus gets a bigger numerator. Meanwhile a stable and monotonic trend has a smaller deviation from the linear model and thus gets a smaller denominator. Using this metric, our method isolates trends that evolve in a monotonous and stable way. Table \ref{tab:trend_exp} shows a few example trends and their change-potentials according to Equation \ref{eq:trend_metric}.
+\noindent\textbf{Rationale of Equation \ref{eq:trend_metric}:} We want to evolve the ranks of statements in a fast, monotonic way. In linear models, \textit{A fast changing monotonic trend should have a larger slope $\beta_1$ as well as a smaller deviation $\epsilon_i$ from the linear model.}
+%In linear models, fast changing monotonic model has a bigger slope and thus gets a bigger numerator. Meanwhile a stable and monotonic trend has a smaller deviation from the linear model and thus gets a smaller denominator. 
+Using this metric in Equation 2 that uses the estimated slope in the numerator and the estimated deviation in the denominator, we may isolate trends that evolve in faster and more stable (less oscillation) ways. Table \ref{tab:trend_exp} shows a few sample trends and their change potentials according to Equation \ref{eq:trend_metric}.
 
 \begin{table}[!htbp]
 	\centering
@@ -104,21 +108,23 @@ In our empirical model, fast changing monotonic model has a bigger slope and thu
 
 \subsection{Speed up the Rank Change Process}
 
-After evaluating the program elements according to their change-potentials, \textsc{Dms} will try to speed up the evolution trend of the program elements based on the change-potential($\mathcal{W}_{\mathcal{T}}$). First, program elements with the same suspiciousness scores are grouped together, they are termed as {\em suspicious group} in this paper. These suspicious groups are then assigned change-potential scores based on the change-potentials of their constituent program elements. When new test cases are added, based on the actual program elements that get executed, some groups can be broken into two. When this happens, the diversity of the suspiciousness scores increases in most cases. The goal of \textsc{Dms} is to select a new test case that breaks a group into two sub-groups where the overall change-potentials are maximized.
+After evaluating the program elements according to their change potentials, \textsc{Dms} will try to speed up the evolution trend of the program elements based on the change potential ($\mathcal{W}_{\mathcal{T}}$). First, program elements with the same suspiciousness scores are grouped together, they are termed as {\em suspicious groups} in this paper.\footnote{We call such groups as {\em suspicious groups} since we emphasize the fact that they may contain potentially suspicious elements. Some other researchers \cite[e.g.][]{Alberto2011} call them {\em ambiguity groups} as that term emphasizes the fact the elements in the groups have the same but ambiguous suspiciousness scores.} These suspicious groups are then assigned change-potential scores based on the change potentials of their constituent program elements. When new test cases are added, based on the actual program elements that get executed, some groups can be broken into two. When this happens, the diversity of the suspiciousness scores increases in most cases. The goal of \textsc{Dms} is to select a new test case that breaks a group into two sub-groups where the overall change potentials are maximized.
 
 We calculate the potential of a group $g$ by summing up the potential of all program elements $d$ that
 belongs to $g$.
 \begin{equation}
-	\mathcal{W}_{g} = \sum\limits_{d \in g}\mathcal{W}_{\mathcal{T}_{d}}\label{eq:elem_potential}
+\label{eq:elem_potential}
+	\mathcal{W}_{g} = \sum\limits_{d \in g}\mathcal{W}_{\mathcal{T}_{d}}
 \end{equation}
 
-where $\mathcal{T}_{d}$ is the change-potential of the program element $d$ based on the labelled execution trace profiles.
+\noindent
+where $\mathcal{W}_{\mathcal{T}_d}$ is the change potential of the program element $d$ based on the labelled execution trace profiles.
 
-\noindent\textbf{Rational of Equation \ref{eq:elem_potential}:} \textit{Group with high change-potential elements should be given higher priority to break.}
+\noindent\textbf{Rationale of Equation \ref{eq:elem_potential}:} \textit{A group with high change-potential elements should be given a higher priority to break.}
+We want to diversify the rankings of elements in the suspicious group that has a high change-potential score. 
+To identify those high change-potential groups, we measure the sum of change-potential scores of its member elements as in Equation~\ref{eq:elem_potential}.
 
-We want to diversify the rankings of elements in the suspicious group that has a high change-potential score. To identify those high change-potential groups, we measure the sum of change-potential scores of its member elements.
-
-The overall change-potential score of all suspicious groups($G$) are calculated as follows:
+The overall change-potential score of all suspicious groups ($G$) are calculated as follows:
 \begin{equation}
 	\mathcal{H}_G = \sum\limits_{g_{i} \in G}{ \mathcal{W}_{g_i}^{2} }\label{eq:groupset_potential}
 \end{equation}
@@ -128,16 +134,17 @@ To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between 
 	\operatorname*{arg\,max}_{t \in T_\mathcal{U}} \left\{ \mathcal{H}_G - \mathcal{H}_{(G \Leftarrow t)} \right\}\label{eq:select_metric}
 \end{equation}
 
-The new groups ($G \Leftarrow t$) and their change-potential $\mathcal{H}_{(G \Leftarrow t)}$ can be estimated based on $t$'s spectrum (i.e., the set of program elements hit by $t$) even when the pass/fail label for $t$ is unknown. Given an existing suspicious group, if a newly added test case $t$ only covers a subset of the group elements, this group may be broken into two: one contains the elements hit by $t$, and the other contains the elements uncovered by $t$. Then, each subgroup inherits a portion of the original group's change-potential proportional to its size. For example, suppose a group $g$ in $\mathcal{H}_{G}$ contains 2 elements, whose potentials are 0.4 and 0.6 respectively, and a new test case $t$ breaks $g$ into $g_{1}$ and $g_{2}$, each of which contains 1 element; then, the change-potentials $\mathcal{W}_{g_1}$ and $\mathcal{W}_{g_2}$ are both $\frac{1}{2}\times(0.4+0.6) = 0.5$.
+The new groups ($G \Leftarrow t$) and their change potential $\mathcal{H}_{(G \Leftarrow t)}$ can be estimated based on $t$'s spectrum (i.e., the set of program elements hit by $t$) even when the pass/fail label for $t$ is unknown. Given an existing suspicious group, if a newly added test case $t$ only covers a subset of the group elements, this group may be broken into two: one contains the elements hit by $t$, and the other contains the elements uncovered by $t$. Then, each subgroup inherits a portion of the original group's change potential proportional to its size. For example, suppose a group $g$ in $\mathcal{H}_{G}$ contains 2 elements, whose potentials are 0.4 and 0.6 respectively, and a new test case $t$ breaks $g$ into $g_{1}$ and $g_{2}$, each of which contains 1 element; then, the change potentials $\mathcal{W}_{g_1}$ and $\mathcal{W}_{g_2}$ are both $\frac{1}{2}\times(0.4+0.6) = 0.5$.
 
-\noindent\textbf{Rational of Equation \ref{eq:groupset_potential} and \ref{eq:select_metric}:} \textit{Test cases that breaks more groups with higher change-potential should be given higher priority.}
-
-Equation \ref{eq:groupset_potential} measures the overall change potential score of all suspicious groups and its square form manifests the diversity of elements ranking. 
-As an example, suppose there are two groups $g_{1}$ and $g_{2}$. Group $g_1$ has two high change-potential elements with change-potential score 0.3 and 0.4. 
+\noindent\textbf{Rationale of Equation \ref{eq:groupset_potential} and \ref{eq:select_metric}:} \textit{A test case that breaks more groups with higher change potentials should be given a higher priority.}
+Equation \ref{eq:groupset_potential} measures the overall change potential score of all suspicious groups and its square form manifests the diversity of elements ranking.
+As an example, suppose there are two groups $g_{1}$ and $g_{2}$. Group $g_1$ has two high change-potential elements with change-potential score 0.3 and 0.4.
 Group $g_{2}$ has two low change-potential elements with change-potential score 0.1 and 0.2.
-According to equation \ref{eq:groupset_potential}, $\mathcal{H}_G = (0.3+0.4)^{2} + (0.1 + 0.2)^2 = 0.58$. After choosing a test case that 1) breaks $g_1$ only and 2) does not change the change-potential score of any elements, then according to equation \ref{eq:select_metric}, the new change-potential would be $0.3^{2} + 0.4^{2} + (0.1 + 0.2)^2 = 0.34$. However, if we choose another test cases that 1) breaks $g_{2}$ only and 2) does not change the change-potential score of any elements, the new change-potential would be $ (0.3+0.4)^{2} + 0.1^{2} + 0.2^{2} = 0.54$. As a result, the test case that breaks the high change-potential group (\textit{i.e.,} $g_{1}$) leads to a larger overall change-potential decrease and thus will be given a higher priority to be selected.
+According to Equation \ref{eq:groupset_potential}, $\mathcal{H}_G = (0.3+0.4)^{2} + (0.1 + 0.2)^2 = 0.58$. After choosing a test case that breaks $g_1$ only and does not change the change-potential score of any element, then according to Equation \ref{eq:select_metric}, the new change potential would be $0.3^{2} + 0.4^{2} + (0.1 + 0.2)^2 = 0.34$. However, if we choose another test case that breaks $g_{2}$ only and does not change the change-potential score of any element, the new change potential would be $ (0.3+0.4)^{2} + 0.1^{2} + 0.2^{2} = 0.54$. As a result, the test case that breaks the high change-potential group (\textit{i.e.,} $g_{1}$) leads to a larger decrease of the overall change potential and thus will be given a higher priority to be selected.
 
-Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements which could lead to {\em confirmation bias}. More specifically, \textsc{Dms} might make an initially promising statement become less suspicious if the statement is covered in the next selected trace and the trace is labeled {\em pass}, or it is not covered in the next selected trace and the trace is labeled {\em fail}.
+Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements that could lead to {\em confirmation bias}. 
+%More specifically, 
+\textsc{Dms} might make an initially promising statement become less suspicious if the statement is covered in the next selected trace and the trace is labeled as {\em pass}, or it is not covered in the next selected trace and the trace is labeled as {\em fail}.
 
 \subsection{Overall Approach}
 
@@ -181,3 +188,7 @@ Repeating the diversity selection process also helps to confirm the previously s
 %Our approach greedily splits suspicious groups based on all previously labeled tests. This may lead to a non-optimal solution as defined by Definition 3.1, but it much simplifies our solution and our empirical study shows it produces promising results to save much human labeling effort, although it may not necessarily save machine time that is required to run all test cases.
 
 \input{example}
+
+\subsection{Approach Complexity}
+
+The time and space complexity of our approach depend on many various factors. It takes linear time with respect to ......

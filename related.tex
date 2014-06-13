@@ -10,7 +10,8 @@ The ways of calculating ambiguousness  for program elements are various, includi
 %Their methods show a great improvement over contentional fault localization methods.
 \cite{RR03} propose a nearest neighbor fault localization tool called \textsc{Whither} that compares the failed execution
 to the correct execution and reports the most ambiguity  locations in the program.
-\cite{Zeller2002a} applies {\em Delta Debugging} to search for the minimum state differences between a failed execution and a successful execution that may cause the failure. \cite{LAZJ03} consider predicates whose true evaluation correlates with failures are more likely to be the root cause. Campos et al. propose ENTBUG which applies entropy theory to guide test case generation~\cite{campos2013entropy}.
+\cite{Zeller2002a} applies {\em Delta Debugging} to search for the minimum state differences between a failed execution and a successful execution that may cause the failure. \cite{LAZJ03} consider predicates whose true evaluation correlates with failures are more likely to be the root cause. 
+\cite{campos2013entropy} propose ENTBUG which applies entropy theory to guide test case generation.
 %Based on the similar intuition, \textsc{Sober}~\citep{LYFHM05} extends Liblit's method by incorporating information on the outcomes of multiple predicate evaluations and use statistical test to determine the difference between predicate values in passed and failed traces.
 
 %Artzi \etal propose a directed test generation technique to provide enough test cases for fault localization techniques~\citep{ArtziDTP10,ADTP10b}. It is very effective for HTML pages since they are of rich structures. However, the code responsible for producing incorrect output might be the entire program, their method is unlikely to be effective for a program that produces simple structures or a single number.

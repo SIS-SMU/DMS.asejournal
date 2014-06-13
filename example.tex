@@ -18,7 +18,7 @@ called $g_{1}$ and $g_{2}$ respectively.
 At this time, the trend for the statements in $g_{1}$ is {\bf\texttt{[+]}}, because the ranks of these statements change from 11 to 6, while the trend for the statements in $g_{2}$
 is {\bf\texttt{[0]}}, because their ranks are still 11.
 The corresponding time series of the statements in $g_{2}$ are:
-$y_{0} = 0$ and $ y_{1} = 1$. Applying equation \ref{eq:trend_metric}, we obtain the change-potential of the trend of the program elements in $g_{2}$ as 1.
+$y_{0} = 0$ and $ y_{1} = 1$. Applying equation \ref{eq:trend_metric}, we obtain the change potential of the trend of the program elements in $g_{2}$ as 1.
 
 
 We now calculate $\mathcal{H}_{G}$ for the current suspicious group set $G=\{g_{1},g_{2}\}$ according to Equation \ref{eq:elem_potential}:
@@ -31,10 +31,10 @@ break ties in $G$ ($G \Leftarrow t_{i}$). Then we calculate the score that evalu
 For example, when evaluating $t_6$, $t_{6}$ covers $s_{1}$,$s_{2}$,$s_{3}$,$s_{4}$,$s_{5}$,$s_{6}$ and $s_{11}$, thus breaks suspicious $g_{2}$
 into \{$s_{5}$,$s_{6}$\} and \{$s_{7}$,$s_{8}$,$s_{9}$, $s_{10}$\}, let us call them $g_{21}$ and $g_{22}$ respectively.
 Now, the score $\mathcal{W}_{g_{21}} = \frac{2}{6} \times \mathcal{W}_{g} = 2$, $\mathcal{W}_{g_{22}} = \frac{4}{6} \times 6 = 4$.
-So if choosing $t_{6}$, the score for $G$ is 
+So if choosing $t_{6}$, the score for $G$ is
 
 \[\mathcal{H}_{(G \Leftarrow t_{6})} = \mathcal{W}_{g_{21}}^{2} + \mathcal{W}_{g_{22}}^{2} = 20\]
-And the reduction is 
+And the reduction is
 
 \[\mathcal{H}_{G} - \mathcal{H}_{(G \Leftarrow t_{6})} = 36 - 20 = 16\].
 
@@ -48,7 +48,7 @@ of the statements in \{$s_{5}$,$s_{6}$\} becomes ({\bf\texttt{[+]}}{\bf\texttt{[
 Note that right now \{$s_{7}$,$s_{8}$,$s_{9}$,$s_{10}$\} gets the highest change-potential score and thus can get more chances to be broken up.
 As shown in Table \ref{tab:dms_evo},
 after three iterations,
-\textsc{Dms} selects (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}). In the next iteration, \textsc{Dms} chooses $t_{9}$ and breaks \{$s_{7}$,$s_{8}$\} and \{$s_{5}$,$s_{6}$\} which have greater change-potentials and consequently ranks $s_7$ the highest. Overall, {\sc Dms} only requires user to manually label four additional traces (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}$\rightarrow$\texttt{$t_{9}$}).
+\textsc{Dms} selects (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}). In the next iteration, \textsc{Dms} chooses $t_{9}$ and breaks \{$s_{7}$,$s_{8}$\} and \{$s_{5}$,$s_{6}$\} which have greater change potentials and consequently ranks $s_7$ the highest. Overall, {\sc Dms} only requires user to manually label four additional traces (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}$\rightarrow$\texttt{$t_{9}$}).
 
 As a comparison, \textsc{Raptor} always chooses the test case that maximally reduces the overall sizes of groups of statements that have the spectrum records (i.e., Ambiguity Group Reduction, c.f.\ Section~\ref{subsubsec.dp}). As shown in Table~\ref{tab:ag_evo}, \textsc{Raptor} effectively selects the same test cases as {\sc Dms} in the first four iterations; however, it chooses $t_{7}$ in the next iteration to break \{$s_{1}$,$s_{2}$,$s_{3}$,$s_{4}$,$s_{9}$,$s_{10}$,$s_{11}$\} and \{$s_{5}$,$s_{6}$\}, and it takes one more iteration to rank $s_7$ the highest.
 %Because breaking these groups can get maximal overall group size reduction.
