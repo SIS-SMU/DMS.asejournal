@@ -124,12 +124,13 @@ where $\mathcal{W}_{\mathcal{T}_d}$ is the change potential of the program eleme
 We want to diversify the rankings of elements in the suspicious group that has a high change-potential score. 
 To identify those high change-potential groups, we measure the sum of change-potential scores of its member elements as in Equation~\ref{eq:elem_potential}.
 
-The overall change-potential score of all suspicious groups ($G$) are calculated as follows:
+The overall change-potential score of all suspicious groups ($G$) is calculated as follows:
 \begin{equation}
 	\mathcal{H}_G = \sum\limits_{g_{i} \in G}{ \mathcal{W}_{g_i}^{2} }\label{eq:groupset_potential}
 \end{equation}
 
-To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between the overall change-potential score of the current groups $G$ ($\mathcal{H}_G$) and the overall change-potential score of all groups when $t$ is added to the pool of labeled test cases ($G \Leftarrow t$), and chooses the test case that can maximize the difference as the next one for labeling.
+To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between the overall change-potential score of the current groups $G$ ($\mathcal{H}_G$) and the overall change-potential score of all groups when $t$ is added to the pool of labeled test cases ($G \Leftarrow t$).
+Since we want to stabilize the ranks of all program elements as quickly as possible with as fewer test cases as possible, we heuristically choose the test case that can maximize the difference and thus the reduction of change potentials as the next one for labeling.
 \begin{equation}
 	\operatorname*{arg\,max}_{t \in T_\mathcal{U}} \left\{ \mathcal{H}_G - \mathcal{H}_{(G \Leftarrow t)} \right\}\label{eq:select_metric}
 \end{equation}
@@ -137,7 +138,7 @@ To evaluate an unlabeled trace $t$, {\sc Dms} calculates the difference between 
 The new groups ($G \Leftarrow t$) and their change potential $\mathcal{H}_{(G \Leftarrow t)}$ can be estimated based on $t$'s spectrum (i.e., the set of program elements hit by $t$) even when the pass/fail label for $t$ is unknown. Given an existing suspicious group, if a newly added test case $t$ only covers a subset of the group elements, this group may be broken into two: one contains the elements hit by $t$, and the other contains the elements uncovered by $t$. Then, each subgroup inherits a portion of the original group's change potential proportional to its size. For example, suppose a group $g$ in $\mathcal{H}_{G}$ contains 2 elements, whose potentials are 0.4 and 0.6 respectively, and a new test case $t$ breaks $g$ into $g_{1}$ and $g_{2}$, each of which contains 1 element; then, the change potentials $\mathcal{W}_{g_1}$ and $\mathcal{W}_{g_2}$ are both $\frac{1}{2}\times(0.4+0.6) = 0.5$.
 
 \noindent\textbf{Rationale of Equation \ref{eq:groupset_potential} and \ref{eq:select_metric}:} \textit{A test case that breaks more groups with higher change potentials should be given a higher priority.}
-Equation \ref{eq:groupset_potential} measures the overall change potential score of all suspicious groups and its square form manifests the diversity of elements ranking.
+Equation \ref{eq:groupset_potential} measures the overall change potential score of all suspicious groups and its square form manifests the diversity of element ranks.
 As an example, suppose there are two groups $g_{1}$ and $g_{2}$. Group $g_1$ has two high change-potential elements with change-potential score 0.3 and 0.4.
 Group $g_{2}$ has two low change-potential elements with change-potential score 0.1 and 0.2.
 According to Equation \ref{eq:groupset_potential}, $\mathcal{H}_G = (0.3+0.4)^{2} + (0.1 + 0.2)^2 = 0.58$. After choosing a test case that breaks $g_1$ only and does not change the change-potential score of any element, then according to Equation \ref{eq:select_metric}, the new change potential would be $0.3^{2} + 0.4^{2} + (0.1 + 0.2)^2 = 0.34$. However, if we choose another test case that breaks $g_{2}$ only and does not change the change-potential score of any element, the new change potential would be $ (0.3+0.4)^{2} + 0.1^{2} + 0.2^{2} = 0.54$. As a result, the test case that breaks the high change-potential group (\textit{i.e.,} $g_{1}$) leads to a larger decrease of the overall change potential and thus will be given a higher priority to be selected.
@@ -150,19 +151,11 @@ Note that \textsc{Dms} does not intentionally increase suspiciousness scores of 
 
 Before prioritization, all test cases will be executed on instrumented program versions and the corresponding traces would be collected.
 Our approach (pseudocode in Algorithm~\ref{algo:DMS}) takes in a set of unlabeled traces $T_\mathcal{U}$ and the labelling budget $k$ (i.e., the maximum number of traces to be manually labeled), and outputs $k$ selected traces for manual analysis.
-One failed trace ($t_{0}$ in Line 1) is also used as an input because a developer usually starts debugging only when at least one test fails\footnote{If there are more than one test fails, Dms randomly select one of them to begin with.}, and fault localization techniques rarely produce meaningful results if all spectra consists of only passed executions.
+One failed trace ($t_{0}$ in Line 1) is also used as an input because a developer usually starts debugging only when at least one test fails,\footnote{If there is more than one test that fails, {\sc Dms} randomly selects one of them to begin with.} and fault localization techniques rarely produce meaningful results if all spectra consists of only passed executions.
 
-To collect indicative trends for analyzing and speedup, at lines 3-9 we first collect $w$ traces by one generic prioritization technique $\mathcal{P}$ and record evolution trend $\mathcal{T}_{d}$ for each program element $d$. This step is desirable since it helps bootstrap the trend analysis in our solution.
-At lines 12-24, we perform the second stage which speeds up the change process based on existing trends. Note that after selecting each test case $t$ in this stage, we will update the trend for all elements. $f_{T}$ represents a fault localization technique (e.g.,{\em Ochiai}), built based on the set of test cases $T$. $f_{T}(d)$ returns the suspicious score for the program element $d$.
+To collect indicative trends for analyzing and speedup, at Lines 3-9 we first collect $w$ traces by one generic prioritization technique $\mathcal{P}$ and record evolution trend $\mathcal{T}_{d}$ for each program element $d$. This step is desirable since it helps bootstrap the trend analysis in our solution.
+At Lines 12-24, we perform the second stage which speeds up the change process based on existing trends. Note that after selecting each test case $t$ in this stage, we will update the trend for all elements. $f_{T}$ represents a fault localization technique (e.g.,{\em Ochiai}), built based on the set of test cases $T$. $f_{T}(d)$ returns the suspicious score for the program element $d$.
 
-
-\begin{table}[!htbp]
-    \centering
-	\caption{Evolution of Suspiciousness Scores for the Running Example in Table~\ref{motiv_example} using RAPTOR~\citep{Alberto2011}.}
-    \includegraphics[width=12cm]{ag_table.pdf}
-	%\vspace*{-16pt}
-    \label{tab:ag_evo}
-\end{table}
 
 \input{pseudocode.tex}
 
@@ -174,10 +167,10 @@ counts the number of unique suspicious scores (diversity) generated by $f_T$, wh
 \end{equation}
 
 The diversity of small programs may reach the maximum after selecting a small number of test cases. To avoid random selection
-after that happens, the pseudocode at lines 20-23 resets the set $T_{tmp}$
+after that happens, the pseudo-code at Lines 20-23 resets the set $T_{tmp}$
 based on which the suspiciousness scores of all program elements are calculated. With this step, \textsc{Dms} can
 continually choose test cases from $T_{\mathcal{U}}$ that maximally diversify suspicious scores calculated based on $T_{tmp}$.
-Repeating the diversity selection process also helps to confirm the previously selected test cases and make the final result more robust.
+Repeating the diversity selection process may help to confirm the previously selected test cases and make the final result more robust.
 
 %\lx{merged with the last paragraph in "Example"}
 %Table \ref{tab:dms_evo} shows the selected test cases for the motivating example using \textsc{Dms}.  \textsc{Raptor} needs five labeled traces (\texttt{$t_{8}$}$\rightarrow$\texttt{$t_{6}$}$\rightarrow$\texttt{$t_{4}$}$\rightarrow$\texttt{$t_{7}$}$\rightarrow$\texttt{$t_{9}$}) to

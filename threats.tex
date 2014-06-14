@@ -1,11 +1,11 @@
-As we noticed, the improvement of \textsc{Dms} in single-fault and multi-fault programs are different. In the 12 single-fault programs,  \textsc{Dms} requires the minimal amount of labeling effort by achieving 67.7\% labeling reduction on Unix programs and 10\% reduction on Siemens programs in comparison with the existing best approach---Raptor. While in the 8 multi-fault programs, \textsc{Dms} achieves 5.95\% labeling reduction in comparison with the existing best approach---Fep-Addtl. The phenomenon happens since we consider the worst cases of \textsc{Dms} in multi-fault programs, i.e., we consider the root case $d_*$ with the lowest suspiciousness score. In some versions of the multi-fault programs, \textsc{Dms} needs more test cases to achieve the value of $c_x$ than that of Fep-Addtl. For example, in the version 2 of the program print\_token2, \textsc{Dms} need to label 500 test cases to achieve $c_x$, while Fep-Addtl only requires 59 test cases. Thus, the reduced number of test cases for \textsc{Dms} in multi-fault program is not as high as that in single-fault program.
+As we have noticed, the improvement of \textsc{Dms} in single-fault and multi-fault programs are different. In the 12 single-fault programs,  \textsc{Dms} requires the minimal amount of labeling effort by achieving 67.7\% labeling reduction on Unix programs and 10\% reduction on Siemens programs in comparison with the existing best approach---{\sc Raptor}. While in the 8 multi-fault programs, \textsc{Dms} achieves 5.95\% labeling reduction in comparison with the existing best approach---{\sc Fep-Addtl}. The phenomenon happens since we consider the worst cases of \textsc{Dms} in multi-fault programs, i.e., we consider the root case $d_*$ with the lowest suspiciousness score. In some versions of the multi-fault programs, \textsc{Dms} needs more test cases to achieve 101\% of base line effectiveness than that of {\sc Fep-Addtl}. For example, in the version 2 of the program print\_token2, \textsc{Dms} need to label 500 test cases to achieve 101\% of base line effectiveness, while {\sc Fep-Addtl} only requires 59 test cases. Thus, the average reduced number of test cases for \textsc{Dms} in multi-fault program is not as high as that in single-fault programs.
 
-However, the improvement of \textsc{Dms} in reducing cost is significant for both single-fault and multi-fault programs. The statistics of  paired Wilcoxon signed-rank test show that \textsc{Dms} is statistically significantly better than the existing best approach on the Unix programs of single-fault subject programs, and multi-fault subject programs at 95\% confidence interval. Moreover, although we notice that \textsc{Dms} reduce the number of test case of Fep-Addtl by 5.95\% in multi-fault programs, but there are 51.45\% fault versions that \textsc{Dms} show positive improvement over Fep-Addtl, and  29.48\% fault versions that \textsc{Dms} show negative improvement over Fep-Addtl, while the number for single-fault programs are 40.16\% and 20.08\%.
+However, the improvement of \textsc{Dms} in reducing cost is significant for both single-fault and multi-fault programs. The statistics of  paired Wilcoxon signed-rank test show that \textsc{Dms} is statistically significantly better than the existing best approach on the Unix programs of single-fault subject programs, and multi-fault subject programs at 95\% confidence interval. Moreover, although we notice that \textsc{Dms} reduce the number of test case of Fep-Addtl by 5.95\% in multi-fault programs, but there are 51.45\% fault versions that \textsc{Dms} show positive improvement over Fep-Addtl, and  29.48\% fault versions that \textsc{Dms} show negative deterioration over Fep-Addtl, while the number for single-fault programs are 40.16\% and 20.08\%.
 
 
 The threats to our studies include the issue of how
 representative the subjects of our studies are. Since the Siemens programs
-are small and larger programs may be subject to different testing and debugging traits.
+are small, and larger programs may be subject to different testing and debugging traits.
 To strengthen the external validity, we include \textsc{Unix} programs which are
 real-life programs. These subjects have been adopted for evaluation in many
 studies \citep[e.g.][]{JH05,Abreu:2009.jss,DBLP:conf/icse/SantelicesJYH09}.
@@ -13,9 +13,11 @@ studies \citep[e.g.][]{JH05,Abreu:2009.jss,DBLP:conf/icse/SantelicesJYH09}.
 Another possible threat is that although our method outperforms existing method
 in 25.2\% to 62.99\% program versions and gets equivalent cost in around 30\% versions,
 there are still a certain percent of versions that our method does not perform very well.
-But as we can see in the studies, most of the negative improvements of those versions
-are relatively small or even trivial comparing to the positive improvements. We also
-conduct statistical test to further confirm the superiority of \textsc{Dms}.
+But as we can see in the studies, most of the negative deterioration of those versions
+are relatively small
+% or even trivial 
+comparing to the positive improvements. We also
+conduct statistical tests to further confirm the advantage of \textsc{Dms}.
 
 %At last, the studies show that \textsc{Dms} outperforms other methods
 %in reducing manual effort for debugging, but the ultimate

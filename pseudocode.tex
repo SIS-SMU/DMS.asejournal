@@ -1,10 +1,12 @@
 
-\begin{algorithm}%[!htb]
+\begin{algorithm}[tb]
 {
 \centering
 %\vspace{0.2cm}
- 
-\hspace{-0.0cm}\parbox[l]{3.2in} {
+
+%\hspace{-0.0cm}
+%\parbox[l]{3.2in}
+{
 {%\small
 \begin {tabular}[t]{l}
 \textbf{Procedure DiversityMaximizationSpeedup}\\
@@ -19,7 +21,7 @@
 \end{tabular}
 \begin{algorithmic}[1]
 	\STATE $T_{tmp} \leftarrow \{<t_0, fail>\}$
-	\STATE \textit{\texttt{//Bootstraping with prioritization technique}} $\mathcal{P}$
+	\STATE \textit{\texttt{//Bootstraping with another prioritization technique}} $\mathcal{P}$
 	\WHILE{$|T_{tmp}|\leq k$ \AND $\left| T_{tmp} \right| \leq w$}
 		\STATE Select $t$ by $\mathcal{P}$
 		\STATE $c \leftarrow$\texttt{\textbf{manual\_label}}($t$)
