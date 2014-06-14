@@ -76,12 +76,12 @@ where $e_{i} = y_{i} - \hat{y}_{i} $ which is the error between the actual value
 
 
 \noindent
-%where $\mathcal{T}_d$ is the estimated linear model for $y_i$ of the element $d$, 
+%where $\mathcal{T}_d$ is the estimated linear model for $y_i$ of the element $d$,
 $\hat{\beta}_{1}$ is estimated by {\em least squares} and $\hat{\sigma}_{\beta_{1}}$ is the error of estimating $\beta_{1}$~\citep{GrIy94}. In this metric, the numerator is the absolute value of the trend slope and the denominator considers the fitness of the regression model which represents the deviation of the actual value from the regression model.
 When the context is clear, we also use $\mathcal{W}_\mathcal{T}$ or $\mathcal{W}_d$ to represent the change potential of a trend or a program element.
 
 \noindent\textbf{Rationale of Equation \ref{eq:trend_metric}:} We want to evolve the ranks of statements in a fast, monotonic way. In linear models, \textit{A fast changing monotonic trend should have a larger slope $\beta_1$ as well as a smaller deviation $\epsilon_i$ from the linear model.}
-%In linear models, fast changing monotonic model has a bigger slope and thus gets a bigger numerator. Meanwhile a stable and monotonic trend has a smaller deviation from the linear model and thus gets a smaller denominator. 
+%In linear models, fast changing monotonic model has a bigger slope and thus gets a bigger numerator. Meanwhile a stable and monotonic trend has a smaller deviation from the linear model and thus gets a smaller denominator.
 Using this metric in Equation 2 that uses the estimated slope in the numerator and the estimated deviation in the denominator, we may isolate trends that evolve in faster and more stable (less oscillation) ways. Table \ref{tab:trend_exp} shows a few sample trends and their change potentials according to Equation \ref{eq:trend_metric}.
 
 \begin{table}[!htbp]
@@ -121,7 +121,7 @@ belongs to $g$.
 where $\mathcal{W}_{\mathcal{T}_d}$ is the change potential of the program element $d$ based on the labelled execution trace profiles.
 
 \noindent\textbf{Rationale of Equation \ref{eq:elem_potential}:} \textit{A group with high change-potential elements should be given a higher priority to break.}
-We want to diversify the rankings of elements in the suspicious group that has a high change-potential score. 
+We want to diversify the rankings of elements in the suspicious group that has a high change-potential score.
 To identify those high change-potential groups, we measure the sum of change-potential scores of its member elements as in Equation~\ref{eq:elem_potential}.
 
 The overall change-potential score of all suspicious groups ($G$) is calculated as follows:
@@ -143,8 +143,8 @@ As an example, suppose there are two groups $g_{1}$ and $g_{2}$. Group $g_1$ has
 Group $g_{2}$ has two low change-potential elements with change-potential score 0.1 and 0.2.
 According to Equation \ref{eq:groupset_potential}, $\mathcal{H}_G = (0.3+0.4)^{2} + (0.1 + 0.2)^2 = 0.58$. After choosing a test case that breaks $g_1$ only and does not change the change-potential score of any element, then according to Equation \ref{eq:select_metric}, the new change potential would be $0.3^{2} + 0.4^{2} + (0.1 + 0.2)^2 = 0.34$. However, if we choose another test case that breaks $g_{2}$ only and does not change the change-potential score of any element, the new change potential would be $ (0.3+0.4)^{2} + 0.1^{2} + 0.2^{2} = 0.54$. As a result, the test case that breaks the high change-potential group (\textit{i.e.,} $g_{1}$) leads to a larger decrease of the overall change potential and thus will be given a higher priority to be selected.
 
-Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements that could lead to {\em confirmation bias}. 
-%More specifically, 
+Note that \textsc{Dms} does not intentionally increase suspiciousness scores of promising statements that could lead to {\em confirmation bias}.
+%More specifically,
 \textsc{Dms} might make an initially promising statement become less suspicious if the statement is covered in the next selected trace and the trace is labeled as {\em pass}, or it is not covered in the next selected trace and the trace is labeled as {\em fail}.
 
 \subsection{Overall Approach}
@@ -182,6 +182,12 @@ Repeating the diversity selection process may help to confirm the previously sel
 
 \input{example}
 
-\subsection{Approach Complexity}
+\subsection{Approach Complexity and Robustness}
 
-The time and space complexity of our approach depend on many various factors. It takes linear time with respect to ......
+The time and space complexity of our approach depend on many various factors. It takes linear time with respect to the number of iterations or test cases
+we want to select, takes quadratic time with respect to the total number
+of available test cases, takes cubic time with respect to the number of program elements, takes cubic time with respect to the number of suspicious
+groups in each iteration. Our approach would also store all of the test spectra in
+the memory for convenience. In comparison with the other existing approach {\sc Raptor}, the trend analysis step in our approach may be more computationally expensive. However, the step would still take short absolute amount of time since the number of selected test cases can be limited to tens or hundreds to achieve effective fault localization.
+
+The results of our approach may not be deterministic either since there are random factors (e.g., the first failed test case to choose) and several user-defined parameters (e.g., the maximal number of test cases to select) employed in the approach. Thus, we repeat running our approach for multiple times in our evaluation to take average performance. The maximal number of test cases to select (i.e., $k$ in Algorithm \ref{algo:DMS}) and the switching threshold $w$ in the bootstrap phase would affect how much improvements our approach can achieve over other existing techniques, but they do not matter for the main focus of our evaluation, which is to evaluate whether Diversity Maximization Speedup ({\sc Dms}) is effective for reducing manual labelling effort and diagnostic cost. Although we expect different optimal $k$ and $w$ for different kinds of programs and faults, we use a consistent setting $k<=500$ and $w=10$ in our evaluation and would suggest potential users to starts with a small setting where they can tolerate the manual labelling cost.
