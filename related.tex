@@ -4,13 +4,15 @@ In this section, we describe related work on fault localization, defect predicti
 
 \smallskip\noindent
 \textbf{Fault} \textbf{Localization.} Over the past decade, many automatic fault localization and debugging methods have been proposed.
-The ways of calculating ambiguousness  for program elements are various, including state-of-arts (e.g. {\em Tarantula}~\citep{JHS02,JH05} and {\em Ochiai}~\citep{Abreu:2009.jss}).
+The ways of calculating suspiciousness for program elements based on program spectra are various, 
+%including state-of-arts (
+such as {\em Tarantula} \citep{JHS02,JH05}, {\em Ochiai} \citep{Abreu:2009.jss}), {\sc Sober} \citep{LYFHM05}, {\em DStar} \citep{Wong2014}, and many others \cite[e.g.][]{Xie2013,Naish2011,Lucia2014,Jiang2007}.
 %In recent work, Baah \etal propose using Probabilistic Program Dependence Graphl~\citep{BaahPH08} and
 %causal inference~\citep{BaahPH10} that combines static dependency information and dynamic coverage information to diagnose the program.
 %Their methods show a great improvement over contentional fault localization methods.
 \cite{RR03} propose a nearest neighbor fault localization tool called \textsc{Whither} that compares the failed execution
 to the correct execution and reports the most ambiguity  locations in the program.
-\cite{Zeller2002a} applies {\em Delta Debugging} to search for the minimum state differences between a failed execution and a successful execution that may cause the failure. \cite{LAZJ03} consider predicates whose true evaluation correlates with failures are more likely to be the root cause. 
+\cite{Zeller2002a} applies {\em Delta Debugging} to search for the minimum state differences between a failed execution and a successful execution that may cause the failure. \cite{LAZJ03} consider predicates whose true evaluation correlates with failures are more likely to be the root cause.
 \cite{campos2013entropy} propose ENTBUG which applies entropy theory to guide test case generation.
 %Based on the similar intuition, \textsc{Sober}~\citep{LYFHM05} extends Liblit's method by incorporating information on the outcomes of multiple predicate evaluations and use statistical test to determine the difference between predicate values in passed and failed traces.
 
