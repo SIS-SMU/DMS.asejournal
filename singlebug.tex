@@ -16,7 +16,7 @@ So one way to compare the effectiveness of different prioritization methods base
 which is defined as follows:
 
 \begin{equation}\label{equation.avgcost}
-	cost = \dfrac{\left|  \left\{ j \left| \right. f_{T_{\mathcal{S}}}(d_j) \geq f_{T_{\mathcal{S}}}(d_*) \right\}  \right|}{\left|  \mathcal{D} \right|}
+	cost = \dfrac{\left|  \ \{ j \ | \ f_{T_{\mathcal{S}}}(d_j) \geq f_{T_{\mathcal{S}}}(d_*) \}  \ \right|}{\left|  \mathcal{D} \right|}
 \end{equation}
 where $\mathcal{D}$ consists of all program elements appearing in the program and $d_*$ represents the fault(s) (i.e., the root cause(s) of failures) of a program.
 We calculate the average cost as the percentage of elements that developers have
@@ -24,14 +24,14 @@ to examine until locating the root causes ($d_*$) of failures. The lower the cos
 Since multiple
 program elements can be assigned with the same suspicious score, the numerator
 is considered as the number of program elements $d_j$ that have bigger or the
-same suspicious score to $d_*$. 
+same suspicious score to $d_*$ in this paper.\footnote{There are a number of alternative ways to define diagnostic costs and accuracies, such as using the number of faults located when up to a certain percentage of program elements are inspected \cite[e.g.][]{Wong2014,Debroy2013,CZ05,BaahPH10,JHS02,Lucia2014}, or assuming a random ordering for elements with the same score and incorporating their expected rank $\frac{\left| \{ j \ | \ f_{T_{\mathcal{S}}}(d_j) = f_{T_{\mathcal{S}}}(d_*) \} \right| + 1}{2}$ in calculating cost \cite[e.g.][]{Ali2009,Steimann2013,Steimann2012,Xu2011}. We use the one in Equation \ref{equation.avgcost} and \ref{equation.accuracy} as they are commonly used and easy to understand, and our focus is on evaluating whether different test case prioritization techniques {\em change} the diagnostic costs, instead of measuring the absolute costs. We believe that if our technique shows significant improvements over one kind of diagnostic cost, it should also show improvements over other kinds of diagnostic cost.}
 
 We can also define the {\em accuracy} of a fault localization technique as the reverse of the cost, which is the higher the better:
 
 \begin{equation}\label{equation.accuracy}
 	accuracy = 1 - cost
 \end{equation}
-In the following parts of the paper, we thus use {\em cost} and {\em accuracy} interchangeably when the context is clear.\footnote{There are a number of other ways to define diagnostic costs and accuracies, such as .... We chose the one in Equation \ref{equation.avgcost} and \ref{equation.accuracy} as they are commonly used and easy to understand.}
+In the following parts of the paper, we thus use {\em cost} and {\em accuracy} interchangeably when the context is clear.
 
 Another way to measure the effectiveness of test case prioritization methods is to see how many test cases can be reduced by each method.
 A major goal of our paper is to minimize the number of test cases that need manual labelling but can maintain fault localization accuracies. So, in the following evaluation results, we also show the numbers of reduced test cases {\em with respect to a targeted fault localization cost (or accuracy)}.
